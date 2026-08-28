@@ -2,7 +2,9 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <div className="brand-icon">▣</div>
+        <div className="brand-icon">
+          <span className="icon-book-open" aria-hidden="true"></span>
+        </div>
 
         <div>
           <h2>LibraryOS</h2>
@@ -31,7 +33,7 @@ function Sidebar() {
         <a href="#" className="nav-item">
           <span>↔</span>
           <span>Borrowing</span>
-          <span className="nav-badge">0</span>
+          <span className="nav-badge">16</span>
         </a>
 
         <a href="#" className="nav-item">
