@@ -12,7 +12,7 @@ function Layout({ children, currentPage = "dashboard", onNavigate, title = "Dash
           date="Wednesday, August 26, 2026"
           searchPlaceholder="Search..."
           notificationCount={5}
-          showAddBook={true}
+          showAddBook={false}
         />
 
         <main className="main-content">
