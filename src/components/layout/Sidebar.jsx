@@ -1,4 +1,9 @@
-function Sidebar() {
+function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
+  const handleNavClick = (event, pageKey) => {
+    event.preventDefault();
+    onNavigate(pageKey);
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -15,12 +20,20 @@ function Sidebar() {
       <nav className="sidebar-nav">
         <p className="nav-section-title">MAIN MENU</p>
 
-        <a href="#" className="nav-item active">
+        <a
+          href="#"
+          className={`nav-item ${currentPage === "dashboard" ? "active" : ""}`}
+          onClick={(event) => handleNavClick(event, "dashboard")}
+        >
           <span>▦</span>
           <span>Dashboard</span>
         </a>
 
-        <a href="#" className="nav-item">
+        <a
+          href="#"
+          className={`nav-item ${currentPage === "book-catalog" ? "active" : ""}`}
+          onClick={(event) => handleNavClick(event, "book-catalog")}
+        >
           <span>▱</span>
           <span>Book Catalog</span>
         </a>
@@ -67,7 +80,7 @@ function Sidebar() {
         </button>
       </div>
     </aside>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;
