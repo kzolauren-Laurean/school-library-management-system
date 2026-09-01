@@ -154,35 +154,29 @@ code {
 
 .brand-icon {
   position: relative;
-  display: grid;
-  flex: 0 0 40px;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #f59e0b;
-  color: #102a43;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 }
 
-.icon-book-open {
-  position: relative;
+.brand-icon img {
   display: block;
-  width: 22px;
-  height: 15px;
-  border: 2px solid currentColor;
-  border-radius: 2px 3px 3px 2px;
-  box-sizing: border-box;
-}
-
-.icon-book-open::before {
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  width: 2px;
-  height: 15px;
-  background: currentColor;
-  content: "";
-  transform: translateX(-50%);
+  width: auto;
+  height: 42px;
+  max-width: 42px;
+  object-fit: contain;
+  border-radius: 0;
+  background: transparent;
+  filter: none;
 }
 
 .sidebar-brand h2 {
@@ -235,10 +229,21 @@ code {
 .nav-item > span:first-child {
   display: inline-flex;
   width: 18px;
+  height: 18px;
   justify-content: center;
+  align-items: center;
   color: #829ab1;
-  font-size: 17px;
   line-height: 1;
+}
+
+.nav-item > span:first-child svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .nav-item:hover,
@@ -255,7 +260,7 @@ code {
 }
 
 .nav-item.active > span:first-child {
-  color: #f59e0b;
+  color: #f5b942;
 }
 
 .nav-badge {
@@ -335,7 +340,16 @@ code {
   background: transparent;
   color: #829ab1;
   cursor: pointer;
-  font-size: 17px;
+}
+
+.user-settings svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .user-settings:hover,
@@ -618,33 +632,43 @@ code {
 
 .dashboard-stat-icon {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   margin-bottom: 16px;
   place-items: center;
-  border-radius: 9px;
+  border-radius: 12px;
   font-size: 20px;
   font-weight: 700;
 }
 
+.dashboard-stat-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .dashboard-stat-icon--blue {
-  background: #e8f1fb;
-  color: #3977ad;
+  background: rgba(72, 135, 214, 0.12);
+  color: #2d6fc5;
 }
 
 .dashboard-stat-icon--green {
-  background: #e7f5ed;
-  color: #378c60;
+  background: rgba(55, 148, 95, 0.12);
+  color: #188a58;
 }
 
 .dashboard-stat-icon--amber {
-  background: #fff3df;
-  color: #c27a16;
+  background: rgba(214, 148, 36, 0.12);
+  color: #cb7d0b;
 }
 
 .dashboard-stat-icon--red {
-  background: #fcebed;
-  color: #c25763;
+  background: rgba(205, 85, 96, 0.12);
+  color: #c44352;
 }
 
 .dashboard-stat-value {
@@ -802,14 +826,26 @@ code {
 }
 
 .dashboard-status-pill {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   padding: 5px 9px;
   border-radius: 999px;
-  background: #e8f5ed;
-  color: #35845a;
+  background: #eaf8ee;
+  color: #2d8a5f;
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
+}
+
+.dashboard-status-pill::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2d8a5f;
 }
 
 .dashboard-due-list {

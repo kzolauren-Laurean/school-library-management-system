@@ -693,10 +693,37 @@ function BookCatalog() {
         }
 
         .catalog-button {
-          padding: 7px 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          padding: 0;
           background: #eef4fb;
           color: #2d536f;
           border: 1px solid #dfeaf5;
+        }
+
+        .catalog-button svg {
+          width: 15px;
+          height: 15px;
+          stroke: currentColor;
+          fill: none;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .catalog-button--view {
+          background: #eaf2ff;
+          border-color: #d9e7ff;
+          color: #3e6fd1;
+        }
+
+        .catalog-button--edit {
+          background: #fff4e5;
+          border-color: #f7e4c7;
+          color: #c7812d;
         }
 
         .catalog-button--danger {
@@ -1081,26 +1108,43 @@ function BookCatalog() {
                         <div className="catalog-action-group">
                           <button
                             type="button"
-                            className="catalog-button"
+                            className="catalog-button catalog-button--view"
                             onClick={() => openViewModal(book)}
+                            aria-label="View book"
+                            title="View book"
                           >
-                            View
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
                           </button>
 
                           <button
                             type="button"
-                            className="catalog-button"
+                            className="catalog-button catalog-button--edit"
                             onClick={() => openEditModal(book)}
+                            aria-label="Edit book"
+                            title="Edit book"
                           >
-                            Edit
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M4 20h4l10.5-10.5a2.12 2.12 0 0 0-3-3L5 17v3Z" />
+                              <path d="m13.5 6.5 4 4" />
+                            </svg>
                           </button>
 
                           <button
                             type="button"
                             className="catalog-button catalog-button--danger"
                             onClick={() => openDeleteModal(book)}
+                            aria-label="Delete book"
+                            title="Delete book"
                           >
-                            Delete
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M4 7h16" />
+                              <path d="M9 7V4h6v3" />
+                              <path d="M7 7l1 12h8l1-12" />
+                              <path d="M10 11v5M14 11v5" />
+                            </svg>
                           </button>
                         </div>
                       </td>
