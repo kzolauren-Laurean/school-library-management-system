@@ -1,8 +1,39 @@
+const BookIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15.5H7.5A2.5 2.5 0 0 0 5 21V5.5Z" />
+    <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15.5H7.5A2.5 2.5 0 0 0 5 21M7.5 6h7.5M7.5 10h7.5" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 12.5 9.2 16.7 19 6.9" />
+  </svg>
+);
+
+const BorrowIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 7h10a3 3 0 0 1 3 3v.5" />
+    <path d="M7 4 4 7l3 3" />
+    <path d="M20 17H10a3 3 0 0 1-3-3v-.5" />
+    <path d="M17 20l3-3-3-3" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M16 18v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1" />
+    <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+    <path d="M19 18v-1a3.5 3.5 0 0 0-2.7-3.4" />
+    <path d="M17 5.5a3.5 3.5 0 0 1 0 6.7" />
+  </svg>
+);
+
 const statCards = [
   {
     id: "total-books",
     tone: "blue",
-    icon: "▱",
+    icon: <BookIcon />,
     value: "4,821",
     label: "Total Books",
     helper: "1,240 unique titles",
@@ -10,7 +41,7 @@ const statCards = [
   {
     id: "available-books",
     tone: "green",
-    icon: "✓",
+    icon: <CheckIcon />,
     value: "3,204",
     label: "Available Books",
     helper: "66% of collection",
@@ -18,7 +49,7 @@ const statCards = [
   {
     id: "borrowed-books",
     tone: "amber",
-    icon: "↔",
+    icon: <BorrowIcon />,
     value: "1,617",
     label: "Borrowed Books",
     helper: "84 overdue",
@@ -26,7 +57,7 @@ const statCards = [
   {
     id: "total-students",
     tone: "red",
-    icon: "♧",
+    icon: <UsersIcon />,
     value: "892",
     label: "Total Students",
     helper: "874 active borrowers",
