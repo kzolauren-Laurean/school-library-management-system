@@ -3,6 +3,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import BookCatalog from "./pages/BookCatalog";
 import Students from "./pages/Students";
+import Borrowing from "./pages/Borrowing";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -16,6 +17,10 @@ function App() {
       return "Students";
     }
 
+    if (currentPage === "borrowing") {
+      return "Borrowing";
+    }
+
     return "Dashboard";
   };
 
@@ -26,6 +31,10 @@ function App() {
 
     if (currentPage === "students") {
       return <Students />;
+    }
+
+    if (currentPage === "borrowing") {
+      return <Borrowing />;
     }
 
     return <Dashboard />;
