@@ -103,7 +103,11 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           <span>Students</span>
         </a>
 
-        <a href="#" className="nav-item">
+        <a
+          href="#"
+          className={`nav-item ${currentPage === "borrowing" ? "active" : ""}`}
+          onClick={(event) => handleNavClick(event, "borrowing")}
+        >
           <span>{navIconMap.borrowing}</span>
           <span>Borrowing</span>
           <span className="nav-badge">16</span>
