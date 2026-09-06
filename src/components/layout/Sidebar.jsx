@@ -103,7 +103,11 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           <span>Students</span>
         </a>
 
-        <a href="#" className="nav-item">
+        <a
+          href="#"
+          className={`nav-item ${currentPage === "borrowing" ? "active" : ""}`}
+          onClick={(event) => handleNavClick(event, "borrowing")}
+        >
           <span>{navIconMap.borrowing}</span>
           <span>Borrowing</span>
           <span className="nav-badge">16</span>
@@ -135,7 +139,11 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           <span>Head Librarian</span>
         </div>
 
-        <button type="button" className="user-settings" aria-label="Open user settings">
+        <button
+          type="button"
+          className="user-settings"
+          aria-label="Open user settings"
+        >
           <GearIcon />
         </button>
       </div>
