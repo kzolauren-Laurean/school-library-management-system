@@ -1,16 +1,27 @@
+import { navigationIcons } from "./NavigationIcons";
+
 function Header({
   title = "Dashboard",
+  currentPage = "dashboard",
+  subtitle,
   date = "Wednesday, August 26, 2026",
   searchPlaceholder = "Search...",
   notificationCount = 5,
   showAddBook = true,
   onAddBookClick,
 }) {
+  const PageIcon = navigationIcons[currentPage] || navigationIcons.dashboard;
+
   return (
     <header className="app-header">
       <div className="header-heading">
-        <h1 className="header-title">{title}</h1>
-        <p className="header-date">{date}</p>
+        <h1 className="header-title">
+          <span className="header-title-icon" aria-hidden="true">
+            <PageIcon />
+          </span>
+          {title}
+        </h1>
+        <p className="header-date">{subtitle || date}</p>
       </div>
 
       <div className="header-actions">

@@ -4,6 +4,7 @@ import {
   useMemo,
   useState
 } from "react";
+import { useLibraryData } from "../data/LibraryDataContext";
 
 const initialBooks = [
   {
@@ -313,6 +314,7 @@ const getNumericBookId = (bookId) => {
 };
 
 function BookCatalog() {
+  const { loans } = useLibraryData();
   const [books, setBooks] = useState(initialBooks);
   const [searchTitle, setSearchTitle] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
@@ -325,9 +327,31 @@ function BookCatalog() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [formData, setFormData] = useState(DEFAULT_FORM);
 
+  const booksWithLoanStatus = useMemo(
+    () =>
+      books.map((book) => {
+        const relatedLoans = loans.filter(
+          (loan) => loan.bookId === book.id || loan.bookTitle === book.title
+        );
+        const hasActiveLoan = relatedLoans.some((loan) => loan.status !== "Returned");
+        const hasReturnedLoan = relatedLoans.some((loan) => loan.status === "Returned");
+
+        if (hasActiveLoan) {
+          return { ...book, status: "Borrowed" };
+        }
+
+        if (hasReturnedLoan && book.status === "Borrowed") {
+          return { ...book, status: "Available" };
+        }
+
+        return book;
+      }),
+    [books, loans]
+  );
+
   const categories = useMemo(
-    () => ["All Categories", ...new Set(books.map((book) => book.category))],
-    [books]
+    () => ["All Categories", ...new Set(booksWithLoanStatus.map((book) => book.category))],
+    [booksWithLoanStatus]
   );
 
   const filteredBooks = useMemo(() => {
@@ -336,7 +360,7 @@ function BookCatalog() {
     const qIsbn = searchIsbn.trim().toLowerCase();
     const qBookId = searchBookId.trim().toLowerCase();
 
-    return books.filter((book) => {
+    return booksWithLoanStatus.filter((book) => {
       const matchesTitle = !qTitle || book.title.toLowerCase().includes(qTitle);
       const matchesAuthor = !qAuthor || book.author.toLowerCase().includes(qAuthor);
       const matchesIsbn = !qIsbn || book.isbn.toLowerCase().includes(qIsbn);
@@ -355,7 +379,7 @@ function BookCatalog() {
         matchesStatus
       );
     });
-  }, [books, categoryFilter, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
+  }, [booksWithLoanStatus, categoryFilter, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBooks.length / PAGE_SIZE));
   const startIndex = (currentPage - 1) * PAGE_SIZE;

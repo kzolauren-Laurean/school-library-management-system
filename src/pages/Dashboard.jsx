@@ -1,3 +1,5 @@
+import { getDateOnly, getLoanDetails, useLibraryData } from "../data/LibraryDataContext";
+
 const BookIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15.5H7.5A2.5 2.5 0 0 0 5 21V5.5Z" />
@@ -181,10 +183,20 @@ const upcomingDueDates = [
 ];
 
 function Dashboard() {
+  const { loans } = useLibraryData();
+  const loanDetails = loans.map((loan) => getLoanDetails(loan, getDateOnly()));
+  const activeLoans = loanDetails.filter((loan) => loan.status !== "Returned");
+  const overdueLoans = activeLoans.filter((loan) => loan.status === "Overdue");
+  const dashboardStatCards = statCards.map((stat) =>
+    stat.id === "borrowed-books"
+      ? { ...stat, value: activeLoans.length.toLocaleString(), helper: `${overdueLoans.length} overdue` }
+      : stat
+  );
+
   return (
     <div className="dashboard">
       <section className="dashboard-stats" aria-label="Library statistics">
-        {statCards.map((stat) => (
+        {dashboardStatCards.map((stat) => (
           <div
             key={stat.id}
             className={`dashboard-stat-card dashboard-stat-card--${stat.tone}`}
