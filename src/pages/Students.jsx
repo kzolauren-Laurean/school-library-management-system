@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLibraryData } from "../data/LibraryDataContext";
 
 const PAGE_SIZE = 10;
 
@@ -366,6 +367,7 @@ const getNumericStudentId = (studentId) => {
 };
 
 function Students() {
+  const { loans } = useLibraryData();
   const [students, setStudents] = useState(initialStudents);
   const [searchTerm, setSearchTerm] = useState("");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
@@ -376,10 +378,26 @@ function Students() {
   const [formData, setFormData] = useState(DEFAULT_FORM);
   const [formError, setFormError] = useState("");
 
+  const studentsWithLoans = useMemo(
+    () =>
+      students.map((student) => {
+        const borrowedBooks = loans
+          .filter((loan) => loan.studentId === student.id && loan.status !== "Returned")
+          .map((loan) => ({ title: loan.bookTitle, dueDate: loan.dueDate }));
+
+        return {
+          ...student,
+          booksOut: borrowedBooks.length,
+          borrowedBooks,
+        };
+      }),
+    [loans, students]
+  );
+
   const filteredStudents = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
-    return students.filter((student) => {
+    return studentsWithLoans.filter((student) => {
       const matchesQuery =
         !query ||
         student.fullName.toLowerCase().includes(query) ||
@@ -391,7 +409,7 @@ function Students() {
 
       return matchesQuery && matchesGrade && matchesStatus;
     });
-  }, [students, searchTerm, gradeFilter, statusFilter]);
+  }, [studentsWithLoans, searchTerm, gradeFilter, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredStudents.length / PAGE_SIZE));
   const startIndex = (currentPage - 1) * PAGE_SIZE;

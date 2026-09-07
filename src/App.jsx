@@ -3,6 +3,8 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import BookCatalog from "./pages/BookCatalog";
 import Students from "./pages/Students";
+import Returns from "./pages/Returns";
+import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
 
 function App() {
@@ -16,6 +18,10 @@ function App() {
     if (currentPage === "students") {
       return "Students";
     }
+
+    if (currentPage === "returns") {
+      return "Returns";
+  }
 
     if (currentPage === "borrowing") {
       return "Borrowing";
@@ -33,6 +39,10 @@ function App() {
       return <Students />;
     }
 
+    if (currentPage === "returns") {
+      return <Returns />;
+  }
+
     if (currentPage === "borrowing") {
       return <Borrowing />;
     }
@@ -40,14 +50,19 @@ function App() {
     return <Dashboard />;
   };
 
+  const pageSubtitle = currentPage === "returns" ? "Process book returns" : undefined;
+
   return (
-    <Layout
-      currentPage={currentPage}
-      onNavigate={setCurrentPage}
-      title={getPageTitle()}
-    >
-      {renderPage()}
-    </Layout>
+    <LibraryDataProvider>
+      <Layout
+        currentPage={currentPage}
+        onNavigate={setCurrentPage}
+        title={getPageTitle()}
+        subtitle={pageSubtitle}
+      >
+        {renderPage()}
+      </Layout>
+    </LibraryDataProvider>
   );
 }
 
