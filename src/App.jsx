@@ -5,6 +5,7 @@ import BookCatalog from "./pages/BookCatalog";
 import Students from "./pages/Students";
 import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
+import Borrowing from "./pages/Borrowing";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -20,6 +21,10 @@ function App() {
 
     if (currentPage === "returns") {
       return "Returns";
+  }
+
+    if (currentPage === "borrowing") {
+      return "Borrowing";
     }
 
     return "Dashboard";
@@ -36,6 +41,10 @@ function App() {
 
     if (currentPage === "returns") {
       return <Returns />;
+  }
+
+    if (currentPage === "borrowing") {
+      return <Borrowing />;
     }
 
     return <Dashboard />;

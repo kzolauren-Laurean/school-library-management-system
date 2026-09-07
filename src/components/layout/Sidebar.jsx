@@ -97,7 +97,11 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           <span>Head Librarian</span>
         </div>
 
-        <button type="button" className="user-settings" aria-label="Open user settings">
+        <button
+          type="button"
+          className="user-settings"
+          aria-label="Open user settings"
+        >
           <GearIcon />
         </button>
       </div>
