@@ -321,6 +321,7 @@ function BookCatalog() {
   const [modalType, setModalType] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
   const [formData, setFormData] = useState(DEFAULT_FORM);
+  const [deleteError, setDeleteError] = useState("");
 
   const booksWithLoanStatus = useMemo(
     () =>
@@ -409,6 +410,7 @@ function BookCatalog() {
 
   const openDeleteModal = (book) => {
     setSelectedBook(book);
+    setDeleteError("");
     setModalType("delete");
   };
 
@@ -416,6 +418,7 @@ function BookCatalog() {
     setModalType(null);
     setSelectedBook(null);
     setFormData(DEFAULT_FORM);
+    setDeleteError("");
   };
 
   const handleInputChange = (event) => {
@@ -463,7 +466,12 @@ function BookCatalog() {
       return;
     }
 
-    deleteBook(selectedBook.id);
+    const result = deleteBook(selectedBook.id);
+    if (!result.success) {
+      setDeleteError(result.message);
+      return;
+    }
+
     closeModal();
   };
 
@@ -1388,6 +1396,7 @@ function BookCatalog() {
                     Are you sure you want to delete <strong>{selectedBook.title}</strong> ({selectedBook.id})?
                     This action cannot be undone.
                   </p>
+                  {deleteError && <p className="form-error">{deleteError}</p>}
                 </div>
 
                 <div className="modal-actions">

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { LibraryDataContext } from "./LibraryDataContextValue";
-import { getDateOnly, getLoanDetails } from "./LibraryUtils";
+import { getDateOnly, getLoanDetails, loanMatchesBook } from "./LibraryUtils";
 
 const initialLoans = [
   ["LN-2001", "Ava Thompson", "ST-101", "The Great Gatsby", "F. Scott Fitzgerald", "2026-08-18", "2026-09-01"],
@@ -54,7 +54,18 @@ export function LibraryDataProvider({ children, initialBooks = [], initialStuden
   };
 
   const deleteBook = (bookId) => {
+    const book = books.find((item) => item.id === bookId);
+
+    if (!book) {
+      return { success: false, message: "Book not found." };
+    }
+
+    if (loans.some((loan) => loanMatchesBook(loan, book))) {
+      return { success: false, message: "This book cannot be deleted because it has loan history." };
+    }
+
     setBooks((currentBooks) => currentBooks.filter((book) => book.id !== bookId));
+    return { success: true };
   };
 
   const addStudent = (student) => {
@@ -70,12 +81,49 @@ export function LibraryDataProvider({ children, initialBooks = [], initialStuden
   };
 
   const deleteStudent = (studentId) => {
+    if (!students.some((student) => student.id === studentId)) {
+      return { success: false, message: "Student not found." };
+    }
+
+    if (loans.some((loan) => loan.studentId === studentId)) {
+      return { success: false, message: "This student cannot be deleted because they have loan history." };
+    }
+
     setStudents((currentStudents) =>
       currentStudents.filter((student) => student.id !== studentId)
     );
+    return { success: true };
   };
 
   const createLoan = ({ student, book, borrowDate, dueDate }) => {
+    const selectedStudent = students.find((item) => item.id === student?.id);
+    const selectedBook = books.find((item) => item.id === book?.id);
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    const isValidDate = (value) => {
+      if (!datePattern.test(value || "")) {
+        return false;
+      }
+
+      const date = new Date(`${value}T00:00:00`);
+      return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+    };
+
+    if (!selectedStudent) {
+      return { success: false, message: "The selected student no longer exists." };
+    }
+
+    if (!selectedBook) {
+      return { success: false, message: "The selected book no longer exists." };
+    }
+
+    if (loans.some((loan) => getLoanDetails(loan).status !== "Returned" && loanMatchesBook(loan, selectedBook))) {
+      return { success: false, message: "That book already has an active loan." };
+    }
+
+    if (!isValidDate(borrowDate) || !isValidDate(dueDate) || dueDate < borrowDate) {
+      return { success: false, message: "Borrow and due dates must be valid, and the due date cannot be before the borrow date." };
+    }
+
     setLoans((currentLoans) => {
       const highestLoanNumber = currentLoans.reduce((highest, loan) => {
         const match = String(loan.loanId || "").match(/(\d+)$/);
@@ -85,11 +133,11 @@ export function LibraryDataProvider({ children, initialBooks = [], initialStuden
       return [
         {
           loanId: `LN-${String(highestLoanNumber + 1).padStart(4, "0")}`,
-          studentName: student.fullName,
-          studentId: student.id,
-          bookId: book.id,
-          bookTitle: book.title,
-          author: book.author,
+          studentName: selectedStudent.fullName,
+          studentId: selectedStudent.id,
+          bookId: selectedBook.id,
+          bookTitle: selectedBook.title,
+          author: selectedBook.author,
           borrowDate,
           dueDate,
           status: "Active",
@@ -100,6 +148,8 @@ export function LibraryDataProvider({ children, initialBooks = [], initialStuden
         ...currentLoans,
       ];
     });
+
+    return { success: true };
   };
 
   const returnLoan = (loanId, returnedDate = getDateOnly()) => {

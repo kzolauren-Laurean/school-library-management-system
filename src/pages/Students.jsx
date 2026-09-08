@@ -382,6 +382,7 @@ function Students() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [formData, setFormData] = useState(DEFAULT_FORM);
   const [formError, setFormError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
   const studentsWithLoans = useMemo(
     () =>
@@ -456,6 +457,7 @@ function Students() {
 
   const openDeleteModal = (student) => {
     setSelectedStudent(student);
+    setDeleteError("");
     setModalType("delete");
   };
 
@@ -464,6 +466,7 @@ function Students() {
     setSelectedStudent(null);
     setFormData(DEFAULT_FORM);
     setFormError("");
+    setDeleteError("");
   };
 
   const handleInputChange = (event) => {
@@ -525,7 +528,12 @@ function Students() {
       return;
     }
 
-    deleteStudent(selectedStudent.id);
+    const result = deleteStudent(selectedStudent.id);
+    if (!result.success) {
+      setDeleteError(result.message);
+      return;
+    }
+
     closeModal();
   };
 
@@ -1655,6 +1663,7 @@ function Students() {
                     Are you sure you want to delete <strong>{selectedStudent.fullName}</strong> ({selectedStudent.id})?
                     This action cannot be undone.
                   </p>
+                  {deleteError && <p className="form-error">{deleteError}</p>}
                 </div>
 
                 <div className="modal-actions">

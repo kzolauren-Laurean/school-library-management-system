@@ -1,4 +1,4 @@
-import { getDateOnly, getLoanDetails } from "../data/LibraryUtils";
+import { getDateOnly, getLoanDetails, loanMatchesBook } from "../data/LibraryUtils";
 import { useLibraryData } from "../data/useLibraryData";
 
 const BookIcon = () => (
@@ -32,172 +32,76 @@ const UsersIcon = () => (
   </svg>
 );
 
-const statCards = [
-  {
-    id: "total-books",
-    tone: "blue",
-    icon: <BookIcon />,
-    value: "4,821",
-    label: "Total Books",
-    helper: "1,240 unique titles",
-  },
-  {
-    id: "available-books",
-    tone: "green",
-    icon: <CheckIcon />,
-    value: "3,204",
-    label: "Available Books",
-    helper: "66% of collection",
-  },
-  {
-    id: "borrowed-books",
-    tone: "amber",
-    icon: <BorrowIcon />,
-    value: "1,617",
-    label: "Borrowed Books",
-    helper: "84 overdue",
-  },
-  {
-    id: "total-students",
-    tone: "red",
-    icon: <UsersIcon />,
-    value: "892",
-    label: "Total Students",
-    helper: "874 active borrowers",
-  },
-];
+const formatDate = (value) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(`${value}T00:00:00`));
 
-const recentBorrowing = [
-  {
-    id: "S1023",
-    student: "Anya Petrov",
-    initials: "AP",
-    book: "Linear Algebra and Its Applications",
-    author: "David C. Lay",
-    borrowed: "Aug 25, 2026",
-    due: "Sep 8, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1020",
-    student: "Samuel Adeyemi",
-    initials: "SA",
-    book: "Steve Jobs",
-    author: "Walter Isaacson",
-    borrowed: "Aug 24, 2026",
-    due: "Sep 7, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1019",
-    student: "Mei Lin Zhou",
-    initials: "ML",
-    book: "Database System Concepts",
-    author: "Abraham Silberschatz",
-    borrowed: "Aug 23, 2026",
-    due: "Sep 6, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1001",
-    student: "Aisha Patel",
-    initials: "AP",
-    book: "Introduction to Algorithms",
-    author: "Thomas H. Cormen",
-    borrowed: "Aug 22, 2026",
-    due: "Sep 5, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1002",
-    student: "Marcus Chen",
-    initials: "MC",
-    book: "Organic Chemistry",
-    author: "John McMurry",
-    borrowed: "Aug 21, 2026",
-    due: "Sep 4, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1003",
-    student: "Sofia Reyes",
-    initials: "SR",
-    book: "World History: Patterns of Interaction",
-    author: "Roger B. Beck",
-    borrowed: "Aug 20, 2026",
-    due: "Sep 3, 2026",
-    status: "Active",
-  },
-  {
-    id: "S1005",
-    student: "Lena Fischer",
-    initials: "LF",
-    book: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    borrowed: "Aug 19, 2026",
-    due: "Sep 2, 2026",
-    status: "Active",
-  },
-];
-
-const upcomingDueDates = [
-  {
-    id: "kwame-asante",
-    student: "Kwame Asante",
-    initials: "KA",
-    book: "Anatomy: A Photographic Atlas",
-    overdueLabel: "18d overdue",
-    dueDate: "Aug 8, 2026",
-  },
-  {
-    id: "priya-sharma",
-    student: "Priya Sharma",
-    initials: "PS",
-    book: "Introduction to Algorithms",
-    overdueLabel: "15d overdue",
-    dueDate: "Aug 11, 2026",
-  },
-  {
-    id: "james-okonkwo",
-    student: "James Okonkwo",
-    initials: "JO",
-    book: "Calculus: Early Transcendentals",
-    overdueLabel: "13d overdue",
-    dueDate: "Aug 13, 2026",
-  },
-  {
-    id: "nina-kowalski",
-    student: "Nina Kowalski",
-    initials: "NK",
-    book: "To Kill a Mockingbird",
-    overdueLabel: "11d overdue",
-    dueDate: "Aug 15, 2026",
-  },
-  {
-    id: "omar-hassan",
-    student: "Omar Hassan",
-    initials: "OH",
-    book: "Organic Chemistry",
-    overdueLabel: "7d overdue",
-    dueDate: "Aug 19, 2026",
-  },
-];
+const getInitials = (name) =>
+  name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
 
 function Dashboard() {
-  const { loans } = useLibraryData();
-  const loanDetails = loans.map((loan) => getLoanDetails(loan, getDateOnly()));
+  const { books, students, loans } = useLibraryData();
+  const today = getDateOnly();
+  const loanDetails = loans.map((loan) => getLoanDetails(loan, today));
   const activeLoans = loanDetails.filter((loan) => loan.status !== "Returned");
   const overdueLoans = activeLoans.filter((loan) => loan.status === "Overdue");
-  const dashboardStatCards = statCards.map((stat) =>
-    stat.id === "borrowed-books"
-      ? { ...stat, value: activeLoans.length.toLocaleString(), helper: `${overdueLoans.length} overdue` }
-      : stat
+  const availableBooks = books.filter(
+    (book) =>
+      book.status === "Available" &&
+      !activeLoans.some((loan) => loanMatchesBook(loan, book))
   );
+  const recentBorrowing = [...loanDetails]
+    .sort((first, second) => second.borrowDate.localeCompare(first.borrowDate))
+    .slice(0, 7);
+  const upcomingDueDates = [...activeLoans]
+    .sort((first, second) => first.dueDate.localeCompare(second.dueDate))
+    .slice(0, 5);
+  const statCards = [
+    {
+      id: "total-books",
+      tone: "blue",
+      icon: <BookIcon />,
+      value: books.length.toLocaleString(),
+      label: "Total Books",
+      helper: `${new Set(books.map((book) => book.title)).size.toLocaleString()} unique titles`,
+    },
+    {
+      id: "available-books",
+      tone: "green",
+      icon: <CheckIcon />,
+      value: availableBooks.length.toLocaleString(),
+      label: "Available Books",
+      helper: `${books.length ? Math.round((availableBooks.length / books.length) * 100) : 0}% of collection`,
+    },
+    {
+      id: "borrowed-books",
+      tone: "amber",
+      icon: <BorrowIcon />,
+      value: activeLoans.length.toLocaleString(),
+      label: "Borrowed Books",
+      helper: `${overdueLoans.length} overdue`,
+    },
+    {
+      id: "total-students",
+      tone: "red",
+      icon: <UsersIcon />,
+      value: students.length.toLocaleString(),
+      label: "Total Students",
+      helper: `${new Set(activeLoans.map((loan) => loan.studentId)).size} active borrowers`,
+    },
+  ];
 
   return (
     <div className="dashboard">
       <section className="dashboard-stats" aria-label="Library statistics">
-        {dashboardStatCards.map((stat) => (
+        {statCards.map((stat) => (
           <div
             key={stat.id}
             className={`dashboard-stat-card dashboard-stat-card--${stat.tone}`}
@@ -219,9 +123,7 @@ function Dashboard() {
         <section className="dashboard-card dashboard-borrowing-card">
           <div className="dashboard-card-header">
             <div>
-              <h2 className="dashboard-card-title">
-                Recent Borrowing Activity
-              </h2>
+              <h2 className="dashboard-card-title">Recent Borrowing Activity</h2>
               <p className="dashboard-card-subtitle">
                 Latest transactions across all students
               </p>
@@ -244,26 +146,26 @@ function Dashboard() {
               </thead>
               <tbody>
                 {recentBorrowing.map((row) => (
-                  <tr key={row.id}>
+                  <tr key={row.loanId}>
                     <td>
                       <div className="dashboard-student-cell">
                         <span className="dashboard-avatar" aria-hidden="true">
-                          {row.initials}
+                          {getInitials(row.studentName)}
                         </span>
                         <div>
-                          <p className="dashboard-student-name">
-                            {row.student}
-                          </p>
-                          <p className="dashboard-student-id">{row.id}</p>
+                          <p className="dashboard-student-name">{row.studentName}</p>
+                          <p className="dashboard-student-id">{row.studentId}</p>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <p className="dashboard-book-title">{row.book}</p>
+                      <p className="dashboard-book-title">{row.bookTitle}</p>
                       <p className="dashboard-book-author">{row.author}</p>
                     </td>
-                    <td className="dashboard-date-cell">{row.borrowed}</td>
-                    <td className="dashboard-date-cell">{row.due}</td>
+                    <td className="dashboard-date-cell">
+                      {formatDate(row.borrowDate)}
+                    </td>
+                    <td className="dashboard-date-cell">{formatDate(row.dueDate)}</td>
                     <td>
                       <span className="dashboard-status-pill dashboard-status-pill--active">
                         {row.status}
@@ -280,25 +182,27 @@ function Dashboard() {
           <div className="dashboard-card-header">
             <div>
               <h2 className="dashboard-card-title">Upcoming Due Dates</h2>
-              <p className="dashboard-card-subtitle">
-                Books due soon or overdue
-              </p>
+              <p className="dashboard-card-subtitle">Books due soon or overdue</p>
             </div>
           </div>
 
           <ul className="dashboard-due-list">
             {upcomingDueDates.map((item) => (
-              <li className="dashboard-due-item" key={item.id}>
+              <li className="dashboard-due-item" key={item.loanId}>
                 <span className="dashboard-avatar" aria-hidden="true">
-                  {item.initials}
+                  {getInitials(item.studentName)}
                 </span>
                 <div className="dashboard-due-info">
-                  <p className="dashboard-due-student">{item.student}</p>
-                  <p className="dashboard-due-book">{item.book}</p>
+                  <p className="dashboard-due-student">{item.studentName}</p>
+                  <p className="dashboard-due-book">{item.bookTitle}</p>
                 </div>
                 <div className="dashboard-due-meta">
-                  <p className="dashboard-due-overdue">{item.overdueLabel}</p>
-                  <p className="dashboard-due-date">{item.dueDate}</p>
+                  <p className="dashboard-due-overdue">
+                    {item.status === "Overdue"
+                      ? `${item.overdueDays}d overdue`
+                      : `${item.days}d remaining`}
+                  </p>
+                  <p className="dashboard-due-date">{formatDate(item.dueDate)}</p>
                 </div>
               </li>
             ))}
