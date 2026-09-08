@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import BookCatalog from "./pages/BookCatalog";
-import Students from "./pages/Students";
+import BookCatalog, { initialBooks } from "./pages/BookCatalog";
+import Students, { initialStudents } from "./pages/Students";
 import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
@@ -21,7 +21,7 @@ function App() {
 
     if (currentPage === "returns") {
       return "Returns";
-  }
+    }
 
     if (currentPage === "borrowing") {
       return "Borrowing";
@@ -41,19 +41,23 @@ function App() {
 
     if (currentPage === "returns") {
       return <Returns />;
-  }
+    }
 
     if (currentPage === "borrowing") {
-      return <Borrowing />;
+      return <Borrowing onNavigate={setCurrentPage} />;
     }
 
     return <Dashboard />;
   };
 
-  const pageSubtitle = currentPage === "returns" ? "Process book returns" : undefined;
+  const pageSubtitle = currentPage === "returns"
+    ? "Process book returns"
+    : currentPage === "borrowing"
+      ? "Track active book loans"
+      : undefined;
 
   return (
-    <LibraryDataProvider>
+    <LibraryDataProvider initialBooks={initialBooks} initialStudents={initialStudents}>
       <Layout
         currentPage={currentPage}
         onNavigate={setCurrentPage}

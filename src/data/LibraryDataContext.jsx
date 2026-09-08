@@ -1,36 +1,6 @@
-import { createContext, useContext, useMemo, useState } from "react";
-
-const FINE_PER_DAY = 0.25;
-
-export const getDateOnly = () => new Date().toISOString().slice(0, 10);
-
-export const getDayDifference = (from, to) =>
-  Math.round(
-    (new Date(`${to}T00:00:00`) - new Date(`${from}T00:00:00`)) / 86400000
-  );
-
-export const getLoanDetails = (loan, today = getDateOnly()) => {
-  if (loan.status === "Returned") {
-    return {
-      ...loan,
-      status: "Returned",
-      days: null,
-      overdueDays: Math.max(0, getDayDifference(loan.dueDate, loan.returnedDate)),
-      fine: loan.finalFine || 0,
-    };
-  }
-
-  const daysUntilDue = getDayDifference(today, loan.dueDate);
-  const overdueDays = Math.max(0, -daysUntilDue);
-
-  return {
-    ...loan,
-    status: overdueDays > 0 ? "Overdue" : "Active",
-    days: daysUntilDue,
-    overdueDays,
-    fine: overdueDays * FINE_PER_DAY,
-  };
-};
+import { useMemo, useState } from "react";
+import { LibraryDataContext } from "./LibraryDataContextValue";
+import { getDateOnly, getLoanDetails } from "./LibraryUtils";
 
 const initialLoans = [
   ["LN-2001", "Ava Thompson", "ST-101", "The Great Gatsby", "F. Scott Fitzgerald", "2026-08-18", "2026-09-01"],
@@ -68,10 +38,69 @@ const initialLoans = [
   fineStatus: "Unpaid",
 }));
 
-const LibraryDataContext = createContext(null);
-
-export function LibraryDataProvider({ children }) {
+export function LibraryDataProvider({ children, initialBooks = [], initialStudents = [] }) {
+  const [books, setBooks] = useState(initialBooks);
+  const [students, setStudents] = useState(initialStudents);
   const [loans, setLoans] = useState(initialLoans);
+
+  const addBook = (book) => {
+    setBooks((currentBooks) => [book, ...currentBooks]);
+  };
+
+  const updateBook = (bookId, updatedBook) => {
+    setBooks((currentBooks) =>
+      currentBooks.map((book) => (book.id === bookId ? updatedBook : book))
+    );
+  };
+
+  const deleteBook = (bookId) => {
+    setBooks((currentBooks) => currentBooks.filter((book) => book.id !== bookId));
+  };
+
+  const addStudent = (student) => {
+    setStudents((currentStudents) => [student, ...currentStudents]);
+  };
+
+  const updateStudent = (studentId, updatedStudent) => {
+    setStudents((currentStudents) =>
+      currentStudents.map((student) =>
+        student.id === studentId ? updatedStudent : student
+      )
+    );
+  };
+
+  const deleteStudent = (studentId) => {
+    setStudents((currentStudents) =>
+      currentStudents.filter((student) => student.id !== studentId)
+    );
+  };
+
+  const createLoan = ({ student, book, borrowDate, dueDate }) => {
+    setLoans((currentLoans) => {
+      const highestLoanNumber = currentLoans.reduce((highest, loan) => {
+        const match = String(loan.loanId || "").match(/(\d+)$/);
+        return Math.max(highest, match ? Number(match[1]) : 0);
+      }, 0);
+
+      return [
+        {
+          loanId: `LN-${String(highestLoanNumber + 1).padStart(4, "0")}`,
+          studentName: student.fullName,
+          studentId: student.id,
+          bookId: book.id,
+          bookTitle: book.title,
+          author: book.author,
+          borrowDate,
+          dueDate,
+          status: "Active",
+          returnedDate: null,
+          finalFine: 0,
+          fineStatus: "None",
+        },
+        ...currentLoans,
+      ];
+    });
+  };
 
   const returnLoan = (loanId, returnedDate = getDateOnly()) => {
     setLoans((currentLoans) =>
@@ -93,17 +122,22 @@ export function LibraryDataProvider({ children }) {
     );
   };
 
-  const value = useMemo(() => ({ loans, returnLoan }), [loans]);
+  const value = useMemo(
+    () => ({
+      books,
+      students,
+      loans,
+      addBook,
+      updateBook,
+      deleteBook,
+      addStudent,
+      updateStudent,
+      deleteStudent,
+      createLoan,
+      returnLoan,
+    }),
+    [books, students, loans]
+  );
 
   return <LibraryDataContext.Provider value={value}>{children}</LibraryDataContext.Provider>;
-}
-
-export function useLibraryData() {
-  const context = useContext(LibraryDataContext);
-
-  if (!context) {
-    throw new Error("useLibraryData must be used inside LibraryDataProvider");
-  }
-
-  return context;
 }

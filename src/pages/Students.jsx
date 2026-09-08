@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLibraryData } from "../data/LibraryDataContext";
+import { useMemo, useState } from "react";
+import { useLibraryData } from "../data/useLibraryData";
 
 const PAGE_SIZE = 10;
 
-const initialStudents = [
+export const initialStudents = [
   {
     id: "ST-101",
     fullName: "Ava Thompson",
@@ -367,8 +367,13 @@ const getNumericStudentId = (studentId) => {
 };
 
 function Students() {
-  const { loans } = useLibraryData();
-  const [students, setStudents] = useState(initialStudents);
+  const {
+    students,
+    loans,
+    addStudent,
+    updateStudent,
+    deleteStudent,
+  } = useLibraryData();
   const [searchTerm, setSearchTerm] = useState("");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
@@ -412,18 +417,9 @@ function Students() {
   }, [studentsWithLoans, searchTerm, gradeFilter, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredStudents.length / PAGE_SIZE));
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const displayPage = Math.min(currentPage, totalPages);
+  const startIndex = (displayPage - 1) * PAGE_SIZE;
   const visibleStudents = filteredStudents.slice(startIndex, startIndex + PAGE_SIZE);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, gradeFilter, statusFilter]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   const openAddModal = () => {
     setFormData({
@@ -511,20 +507,14 @@ function Students() {
         borrowedBooks: [],
       };
 
-      setStudents((current) => [newStudent, ...current]);
+      addStudent(newStudent);
     }
 
     if (modalType === "edit") {
-      setStudents((current) =>
-        current.map((student) =>
-          student.id === trimmedData.id
-            ? {
-                ...student,
-                ...trimmedData,
-              }
-            : student
-        )
-      );
+      updateStudent(trimmedData.id, {
+        ...selectedStudent,
+        ...trimmedData,
+      });
     }
 
     closeModal();
@@ -535,9 +525,7 @@ function Students() {
       return;
     }
 
-    setStudents((current) =>
-      current.filter((student) => student.id !== selectedStudent.id)
-    );
+    deleteStudent(selectedStudent.id);
     closeModal();
   };
 
@@ -1310,7 +1298,7 @@ function Students() {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
+                onChange={(event) => { setSearchTerm(event.target.value); setCurrentPage(1); }}
                 placeholder="Search student name, email, or student ID"
                 aria-label="Search students"
               />
@@ -1322,7 +1310,7 @@ function Students() {
                 <select
                   id="grade-filter"
                   value={gradeFilter}
-                  onChange={(event) => setGradeFilter(event.target.value)}
+                  onChange={(event) => { setGradeFilter(event.target.value); setCurrentPage(1); }}
                 >
                   {GRADE_OPTIONS.map((grade) => (
                     <option key={grade} value={grade}>
@@ -1337,7 +1325,7 @@ function Students() {
                 <select
                   id="status-filter"
                   value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value)}
+                  onChange={(event) => { setStatusFilter(event.target.value); setCurrentPage(1); }}
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -1448,7 +1436,7 @@ function Students() {
               <button
                 type="button"
                 className="students-pagination-button"
-                disabled={currentPage === 1}
+                disabled={displayPage === 1}
                 onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
               >
                 Prev
@@ -1458,7 +1446,7 @@ function Students() {
                 <button
                   key={pageNumber}
                   type="button"
-                  className={`students-pagination-button ${pageNumber === currentPage ? "is-active" : ""}`}
+                  className={`students-pagination-button ${pageNumber === displayPage ? "is-active" : ""}`}
                   onClick={() => setCurrentPage(pageNumber)}
                 >
                   {pageNumber}
@@ -1468,7 +1456,7 @@ function Students() {
               <button
                 type="button"
                 className="students-pagination-button"
-                disabled={currentPage === totalPages}
+                disabled={displayPage === totalPages}
                 onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
               >
                 Next

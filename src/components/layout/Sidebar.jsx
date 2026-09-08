@@ -7,8 +7,15 @@ import {
   ReturnIcon,
   UsersIcon,
 } from "./NavigationIcons";
+import { getDateOnly, getLoanDetails } from "../../data/LibraryUtils";
+import { useLibraryData } from "../../data/useLibraryData";
 
 function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
+  const { loans } = useLibraryData();
+  const currentLoanCount = loans.filter(
+    (loan) => getLoanDetails(loan, getDateOnly()).status !== "Returned"
+  ).length;
+
   const handleNavClick = (event, pageKey) => {
     event.preventDefault();
     onNavigate(pageKey);
@@ -64,7 +71,7 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
         >
           <span><BorrowIcon /></span>
           <span>Borrowing</span>
-          <span className="nav-badge">16</span>
+          <span className="nav-badge">{currentLoanCount}</span>
         </a>
 
         <a

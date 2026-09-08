@@ -1,12 +1,8 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
-import { useLibraryData } from "../data/LibraryDataContext";
+import { useMemo, useState } from "react";
+import { loanMatchesBook } from "../data/LibraryUtils";
+import { useLibraryData } from "../data/useLibraryData";
 
-const initialBooks = [
+export const initialBooks = [
   {
     id: "BK-101",
     title: "Atomic Habits",
@@ -314,8 +310,7 @@ const getNumericBookId = (bookId) => {
 };
 
 function BookCatalog() {
-  const { loans } = useLibraryData();
-  const [books, setBooks] = useState(initialBooks);
+  const { books, loans, addBook, updateBook, deleteBook } = useLibraryData();
   const [searchTitle, setSearchTitle] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
   const [searchIsbn, setSearchIsbn] = useState("");
@@ -331,7 +326,7 @@ function BookCatalog() {
     () =>
       books.map((book) => {
         const relatedLoans = loans.filter(
-          (loan) => loan.bookId === book.id || loan.bookTitle === book.title
+          (loan) => loanMatchesBook(loan, book)
         );
         const hasActiveLoan = relatedLoans.some((loan) => loan.status !== "Returned");
         const hasReturnedLoan = relatedLoans.some((loan) => loan.status === "Returned");
@@ -382,18 +377,9 @@ function BookCatalog() {
   }, [booksWithLoanStatus, categoryFilter, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBooks.length / PAGE_SIZE));
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const displayPage = Math.min(currentPage, totalPages);
+  const startIndex = (displayPage - 1) * PAGE_SIZE;
   const visibleBooks = filteredBooks.slice(startIndex, startIndex + PAGE_SIZE);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTitle, searchAuthor, searchIsbn, searchBookId, categoryFilter, statusFilter]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   const openAddModal = () => {
     setFormData({ ...DEFAULT_FORM, category: "Fiction", status: "Available" });
@@ -462,13 +448,11 @@ function BookCatalog() {
     }
 
     if (modalType === "add") {
-      setBooks((current) => [trimmedData, ...current]);
+      addBook(trimmedData);
     }
 
     if (modalType === "edit") {
-      setBooks((current) =>
-        current.map((book) => (book.id === trimmedData.id ? trimmedData : book))
-      );
+      updateBook(trimmedData.id, trimmedData);
     }
 
     closeModal();
@@ -479,7 +463,7 @@ function BookCatalog() {
       return;
     }
 
-    setBooks((current) => current.filter((book) => book.id !== selectedBook.id));
+    deleteBook(selectedBook.id);
     closeModal();
   };
 
@@ -1016,7 +1000,7 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchTitle}
-                  onChange={(event) => setSearchTitle(event.target.value)}
+                  onChange={(event) => { setSearchTitle(event.target.value); setCurrentPage(1); }}
                   placeholder="Title"
                 />
               </label>
@@ -1026,7 +1010,7 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchAuthor}
-                  onChange={(event) => setSearchAuthor(event.target.value)}
+                  onChange={(event) => { setSearchAuthor(event.target.value); setCurrentPage(1); }}
                   placeholder="Author"
                 />
               </label>
@@ -1036,7 +1020,7 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchIsbn}
-                  onChange={(event) => setSearchIsbn(event.target.value)}
+                  onChange={(event) => { setSearchIsbn(event.target.value); setCurrentPage(1); }}
                   placeholder="ISBN"
                 />
               </label>
@@ -1046,7 +1030,7 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchBookId}
-                  onChange={(event) => setSearchBookId(event.target.value)}
+                  onChange={(event) => { setSearchBookId(event.target.value); setCurrentPage(1); }}
                   placeholder="BK-101"
                 />
               </label>
@@ -1057,7 +1041,7 @@ function BookCatalog() {
                 <span>Category</span>
                 <select
                   value={categoryFilter}
-                  onChange={(event) => setCategoryFilter(event.target.value)}
+                  onChange={(event) => { setCategoryFilter(event.target.value); setCurrentPage(1); }}
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -1071,7 +1055,7 @@ function BookCatalog() {
                 <span>Status</span>
                 <select
                   value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value)}
+                  onChange={(event) => { setStatusFilter(event.target.value); setCurrentPage(1); }}
                 >
                   {[
                     "All Statuses",
