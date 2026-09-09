@@ -13,7 +13,7 @@ import { useLibraryData } from "../../data/useLibraryData";
 function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
   const { loans } = useLibraryData();
   const currentLoanCount = loans.filter(
-    (loan) => getLoanDetails(loan, getDateOnly()).status !== "Returned"
+    (loan) => getLoanDetails(loan, getDateOnly()).status !== "Returned",
   ).length;
 
   const handleNavClick = (event, pageKey) => {
@@ -42,7 +42,9 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           className={`nav-item ${currentPage === "dashboard" ? "active" : ""}`}
           onClick={(event) => handleNavClick(event, "dashboard")}
         >
-          <span><DashboardIcon /></span>
+          <span>
+            <DashboardIcon />
+          </span>
           <span>Dashboard</span>
         </a>
 
@@ -51,7 +53,9 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           className={`nav-item ${currentPage === "book-catalog" ? "active" : ""}`}
           onClick={(event) => handleNavClick(event, "book-catalog")}
         >
-          <span><BookIcon /></span>
+          <span>
+            <BookIcon />
+          </span>
           <span>Book Catalog</span>
         </a>
 
@@ -60,7 +64,9 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           className={`nav-item ${currentPage === "students" ? "active" : ""}`}
           onClick={(event) => handleNavClick(event, "students")}
         >
-          <span><UsersIcon /></span>
+          <span>
+            <UsersIcon />
+          </span>
           <span>Students</span>
         </a>
 
@@ -69,7 +75,9 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           className={`nav-item ${currentPage === "borrowing" ? "active" : ""}`}
           onClick={(event) => handleNavClick(event, "borrowing")}
         >
-          <span><BorrowIcon /></span>
+          <span>
+            <BorrowIcon />
+          </span>
           <span>Borrowing</span>
           <span className="nav-badge">{currentLoanCount}</span>
         </a>
@@ -79,19 +87,29 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           className={`nav-item ${currentPage === "returns" ? "active" : ""}`}
           onClick={(event) => handleNavClick(event, "returns")}
         >
-          <span><ReturnIcon /></span>
+          <span>
+            <ReturnIcon />
+          </span>
           <span>Returns</span>
         </a>
 
         <p className="nav-section-title system-title">SYSTEM</p>
 
-        <a href="#" className="nav-item">
-          <span><ReportsIcon /></span>
+        <a
+          href="#"
+          className={`nav-item ${currentPage === "reports" ? "active" : ""}`}
+          onClick={(event) => handleNavClick(event, "reports")}
+        >
+          <span>
+            <ReportsIcon />
+          </span>
           <span>Reports</span>
         </a>
 
         <a href="#" className="nav-item">
-          <span><GearIcon /></span>
+          <span>
+            <GearIcon />
+          </span>
           <span>Settings</span>
         </a>
       </nav>
