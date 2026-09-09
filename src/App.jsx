@@ -6,6 +6,7 @@ import Students, { initialStudents } from "./pages/Students";
 import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
+import Reports from "./pages/Reports";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -25,6 +26,10 @@ function App() {
 
     if (currentPage === "borrowing") {
       return "Borrowing";
+    }
+
+    if (currentPage === "reports") {
+      return "Reports";
     }
 
     return "Dashboard";
@@ -47,17 +52,27 @@ function App() {
       return <Borrowing onNavigate={setCurrentPage} />;
     }
 
+    if (currentPage === "reports") {
+      return <Reports />;
+    }
+
     return <Dashboard />;
   };
 
-  const pageSubtitle = currentPage === "returns"
-    ? "Process book returns"
-    : currentPage === "borrowing"
-      ? "Track active book loans"
-      : undefined;
+  const pageSubtitle =
+    currentPage === "returns"
+      ? "Process book returns"
+      : currentPage === "borrowing"
+        ? "Track active book loans"
+        : currentPage === "reports"
+          ? "Analyze library activity, borrowing trends, and collection performance"
+          : undefined;
 
   return (
-    <LibraryDataProvider initialBooks={initialBooks} initialStudents={initialStudents}>
+    <LibraryDataProvider
+      initialBooks={initialBooks}
+      initialStudents={initialStudents}
+    >
       <Layout
         currentPage={currentPage}
         onNavigate={setCurrentPage}
