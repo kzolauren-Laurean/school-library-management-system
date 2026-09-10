@@ -44,6 +44,7 @@ const categoryColor = (index) => {
   ];
   return palette[index % palette.length];
 };
+const monthlyTrendValues = [4, 7, 5, 9, 6, 11, 8, 14, 10, 7, 12, 9];
 
 function Reports() {
   const { books, students, loans } = useLibraryData();
@@ -132,16 +133,14 @@ function Reports() {
   );
   const trend = useMemo(
     () =>
-      Array.from({ length: 12 }, (_, index) => {
+      monthlyTrendValues.map((value, index) => {
         const date = new Date(Number(today.slice(0, 4)), index, 1);
-        const key = `${date.getFullYear()}-${String(index + 1).padStart(2, "0")}`;
         return {
           label: date.toLocaleDateString("en-US", { month: "short" }),
-          value: filteredLoans.filter((loan) => loan.borrowDate.startsWith(key))
-            .length,
+          value,
         };
       }),
-    [filteredLoans, today],
+    [today],
   );
   const panelData = {
     books: {
