@@ -1652,7 +1652,7 @@ function Students() {
             {modalType === "delete" && selectedStudent && (
               <>
                 <div className="students-modal-header">
-                  <h3>Confirm Deletion</h3>
+                  <h3>Delete Student</h3>
                   <button type="button" className="modal-close-btn" onClick={closeModal}>
                     ×
                   </button>

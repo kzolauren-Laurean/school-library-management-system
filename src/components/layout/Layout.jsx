@@ -12,9 +12,10 @@ function Layout({ children, currentPage = "dashboard", onNavigate, title = "Dash
           currentPage={currentPage}
           subtitle={subtitle}
           date="Wednesday, August 26, 2026"
-          searchPlaceholder="Search..."
+          searchPlaceholder={currentPage === "settings" ? "Search books, students..." : "Search..."}
           notificationCount={5}
           showAddBook={false}
+          showPageIcon={currentPage !== "settings"}
         />
 
         <main className="main-content">

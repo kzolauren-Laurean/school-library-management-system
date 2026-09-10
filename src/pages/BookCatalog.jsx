@@ -315,7 +315,6 @@ function BookCatalog() {
   const [searchAuthor, setSearchAuthor] = useState("");
   const [searchIsbn, setSearchIsbn] = useState("");
   const [searchBookId, setSearchBookId] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All Categories");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
   const [currentPage, setCurrentPage] = useState(1);
   const [modalType, setModalType] = useState(null);
@@ -361,8 +360,6 @@ function BookCatalog() {
       const matchesAuthor = !qAuthor || book.author.toLowerCase().includes(qAuthor);
       const matchesIsbn = !qIsbn || book.isbn.toLowerCase().includes(qIsbn);
       const matchesBookId = !qBookId || book.id.toLowerCase().includes(qBookId);
-      const matchesCategory =
-        categoryFilter === "All Categories" || book.category === categoryFilter;
       const matchesStatus =
         statusFilter === "All Statuses" || book.status === statusFilter;
 
@@ -371,11 +368,10 @@ function BookCatalog() {
         matchesAuthor &&
         matchesIsbn &&
         matchesBookId &&
-        matchesCategory &&
         matchesStatus
       );
     });
-  }, [booksWithLoanStatus, categoryFilter, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
+  }, [booksWithLoanStatus, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBooks.length / PAGE_SIZE));
   const displayPage = Math.min(currentPage, totalPages);
@@ -554,7 +550,7 @@ function BookCatalog() {
 
         .catalog-search-grid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
           gap: 14px;
         }
 
@@ -594,17 +590,6 @@ function BookCatalog() {
           outline: 2px solid rgba(51, 78, 104, 0.18);
           border-color: #b9c8d8;
           background: #ffffff;
-        }
-
-        .catalog-select-row {
-          display: flex;
-          gap: 14px;
-          margin-top: 16px;
-          max-width: 420px;
-        }
-
-        .catalog-select-row .catalog-field {
-          flex: 1;
         }
 
         .catalog-table-wrap {
@@ -976,11 +961,6 @@ function BookCatalog() {
             grid-template-columns: 1fr;
           }
 
-          .catalog-select-row {
-            max-width: none;
-            flex-direction: column;
-          }
-
           .catalog-footer {
             flex-direction: column;
             align-items: flex-start;
@@ -1041,22 +1021,6 @@ function BookCatalog() {
                   onChange={(event) => { setSearchBookId(event.target.value); setCurrentPage(1); }}
                   placeholder="BK-101"
                 />
-              </label>
-            </div>
-
-            <div className="catalog-select-row">
-              <label className="catalog-field">
-                <span>Category</span>
-                <select
-                  value={categoryFilter}
-                  onChange={(event) => { setCategoryFilter(event.target.value); setCurrentPage(1); }}
-                >
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
               </label>
 
               <label className="catalog-field">
@@ -1322,7 +1286,7 @@ function BookCatalog() {
             ) : null}
 
             {modalType === "view" && selectedBook ? (
-              <div className="catalog-modal" role="dialog" aria-modal="true" aria-label="View Book Details">
+              <div className="catalog-modal catalog-modal--detail" role="dialog" aria-modal="true" aria-label="View Book Details">
                 <div className="catalog-modal-header">
                   <h3>Book Details</h3>
                   <button type="button" className="modal-close-btn" onClick={closeModal} aria-label="Close dialog">
@@ -1383,7 +1347,7 @@ function BookCatalog() {
             ) : null}
 
             {modalType === "delete" && selectedBook ? (
-              <div className="catalog-modal" role="dialog" aria-modal="true" aria-label="Delete Book">
+              <div className="catalog-modal catalog-modal--delete" role="dialog" aria-modal="true" aria-label="Delete Book">
                 <div className="catalog-modal-header">
                   <h3>Delete Book</h3>
                   <button type="button" className="modal-close-btn" onClick={closeModal} aria-label="Close dialog">
