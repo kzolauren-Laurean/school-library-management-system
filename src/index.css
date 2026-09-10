@@ -11,8 +11,8 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -42,7 +42,9 @@ body {
   box-sizing: border-box;
 }
 
-.app-theme { min-height: 100svh; }
+.app-theme {
+  min-height: 100svh;
+}
 
 h1,
 h2 {
@@ -210,7 +212,9 @@ code {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .nav-button {
@@ -434,22 +438,38 @@ code {
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.header-search-input {
   width: 260px;
-  max-width: 100%;
   height: 40px;
-  margin: 0;
-  padding: 0 14px 0 38px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   background: #f1f5f9;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+
+.header-search:focus-within {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+  background: #ffffff;
+}
+
+.header-search-input {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 14px 0 38px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
   color: #101828;
   font-size: 14px;
   font-family: var(--sans);
   box-sizing: border-box;
-  transition: border-color 0.2s, background 0.2s;
+  outline: none;
 }
 
 .header-search-input::placeholder {
@@ -458,8 +478,8 @@ code {
 
 .header-search-input:focus-visible {
   outline: none;
-  border-color: #334e68;
-  background: #ffffff;
+  box-shadow: none;
+  background: transparent;
 }
 
 .icon-search {
@@ -510,7 +530,9 @@ code {
   border-radius: 8px;
   background: #ffffff;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .header-notification-btn:hover {

@@ -11,7 +11,8 @@ export const initialBooks = [
     category: "Self-Improvement",
     status: "Available",
     year: 2018,
-    description: "A practical guide to building good habits and breaking bad ones.",
+    description:
+      "A practical guide to building good habits and breaking bad ones.",
   },
   {
     id: "BK-102",
@@ -21,7 +22,8 @@ export const initialBooks = [
     category: "Finance",
     status: "Borrowed",
     year: 2020,
-    description: "Learn the behavioral side of money and how wealth is built over time.",
+    description:
+      "Learn the behavioral side of money and how wealth is built over time.",
   },
   {
     id: "BK-103",
@@ -31,7 +33,8 @@ export const initialBooks = [
     category: "Technology",
     status: "Available",
     year: 1999,
-    description: "A timeless guide for modern software craftsmanship and technical decision-making.",
+    description:
+      "A timeless guide for modern software craftsmanship and technical decision-making.",
   },
   {
     id: "BK-104",
@@ -51,7 +54,8 @@ export const initialBooks = [
     category: "Technology",
     status: "Available",
     year: 2008,
-    description: "Practical programming principles and best practices for writing maintainable code.",
+    description:
+      "Practical programming principles and best practices for writing maintainable code.",
   },
   {
     id: "BK-106",
@@ -61,7 +65,8 @@ export const initialBooks = [
     category: "Biography",
     status: "Borrowed",
     year: 2018,
-    description: "A memoir about resilience, education, and the pursuit of self-discovery.",
+    description:
+      "A memoir about resilience, education, and the pursuit of self-discovery.",
   },
   {
     id: "BK-107",
@@ -71,7 +76,8 @@ export const initialBooks = [
     category: "Fiction",
     status: "Available",
     year: 2019,
-    description: "A dark psychological thriller about obsession, memory, and silence.",
+    description:
+      "A dark psychological thriller about obsession, memory, and silence.",
   },
   {
     id: "BK-108",
@@ -81,7 +87,8 @@ export const initialBooks = [
     category: "History",
     status: "Archived",
     year: 2015,
-    description: "A sweeping narrative of human history from the Stone Age to the present.",
+    description:
+      "A sweeping narrative of human history from the Stone Age to the present.",
   },
   {
     id: "BK-109",
@@ -91,7 +98,8 @@ export const initialBooks = [
     category: "Fiction",
     status: "Available",
     year: 1988,
-    description: "A fable about purpose, destiny, and the journey toward personal legend.",
+    description:
+      "A fable about purpose, destiny, and the journey toward personal legend.",
   },
   {
     id: "BK-110",
@@ -101,7 +109,8 @@ export const initialBooks = [
     category: "Self-Improvement",
     status: "Borrowed",
     year: 2018,
-    description: "A practical guide to building good habits and breaking bad ones.",
+    description:
+      "A practical guide to building good habits and breaking bad ones.",
   },
   {
     id: "BK-111",
@@ -111,7 +120,8 @@ export const initialBooks = [
     category: "Science Fiction",
     status: "Available",
     year: 1965,
-    description: "Epic political and environmental struggles in a desert planet.",
+    description:
+      "Epic political and environmental struggles in a desert planet.",
   },
   {
     id: "BK-112",
@@ -121,7 +131,8 @@ export const initialBooks = [
     category: "Fantasy",
     status: "Available",
     year: 1937,
-    description: "A classic adventure of treasure, trolls, and a reluctant hero.",
+    description:
+      "A classic adventure of treasure, trolls, and a reluctant hero.",
   },
   {
     id: "BK-113",
@@ -131,7 +142,8 @@ export const initialBooks = [
     category: "History",
     status: "Reserved",
     year: 1937,
-    description: "A social and political classic on class and labor in Britain.",
+    description:
+      "A social and political classic on class and labor in Britain.",
   },
   {
     id: "BK-114",
@@ -141,7 +153,8 @@ export const initialBooks = [
     category: "Psychology",
     status: "Borrowed",
     year: 2011,
-    description: "An exploration of human judgment, decision-making, and cognitive bias.",
+    description:
+      "An exploration of human judgment, decision-making, and cognitive bias.",
   },
   {
     id: "BK-115",
@@ -151,7 +164,8 @@ export const initialBooks = [
     category: "Business",
     status: "Available",
     year: 2011,
-    description: "A method for building businesses through validated learning and iteration.",
+    description:
+      "A method for building businesses through validated learning and iteration.",
   },
   {
     id: "BK-116",
@@ -161,7 +175,8 @@ export const initialBooks = [
     category: "Fantasy",
     status: "Available",
     year: 2007,
-    description: "A beautifully written coming-of-age fantasy following a famed magician.",
+    description:
+      "A beautifully written coming-of-age fantasy following a famed magician.",
   },
   {
     id: "BK-117",
@@ -171,7 +186,8 @@ export const initialBooks = [
     category: "Science Fiction",
     status: "Borrowed",
     year: 2011,
-    description: "A stranded astronaut must use engineering skill to survive alone on Mars.",
+    description:
+      "A stranded astronaut must use engineering skill to survive alone on Mars.",
   },
   {
     id: "BK-118",
@@ -181,7 +197,8 @@ export const initialBooks = [
     category: "Fiction",
     status: "Archived",
     year: 1967,
-    description: "A magical realist family saga spanning generations in Macondo.",
+    description:
+      "A magical realist family saga spanning generations in Macondo.",
   },
   {
     id: "BK-119",
@@ -201,7 +218,8 @@ export const initialBooks = [
     category: "Psychology",
     status: "Reserved",
     year: 2023,
-    description: "A guide to tackling self-doubt and building confidence in everyday life.",
+    description:
+      "A guide to tackling self-doubt and building confidence in everyday life.",
   },
   {
     id: "BK-121",
@@ -221,7 +239,8 @@ export const initialBooks = [
     category: "Philosophy",
     status: "Borrowed",
     year: 1946,
-    description: "A profound reflection on purpose and resilience in the face of suffering.",
+    description:
+      "A profound reflection on purpose and resilience in the face of suffering.",
   },
   {
     id: "BK-123",
@@ -241,7 +260,8 @@ export const initialBooks = [
     category: "Science Fiction",
     status: "Available",
     year: 2021,
-    description: "A brilliant astronaut and a mysterious alien problem create an unforgettable journey.",
+    description:
+      "A brilliant astronaut and a mysterious alien problem create an unforgettable journey.",
   },
   {
     id: "BK-125",
@@ -251,7 +271,8 @@ export const initialBooks = [
     category: "Fiction",
     status: "Borrowed",
     year: 2005,
-    description: "A moving story told through the lens of wartime Germany and a young thief of books.",
+    description:
+      "A moving story told through the lens of wartime Germany and a young thief of books.",
   },
   {
     id: "BK-126",
@@ -261,7 +282,8 @@ export const initialBooks = [
     category: "Psychology",
     status: "Reserved",
     year: 2021,
-    description: "A modern overview of the brain-behavior relationship and underlying mechanisms.",
+    description:
+      "A modern overview of the brain-behavior relationship and underlying mechanisms.",
   },
   {
     id: "BK-127",
@@ -271,7 +293,8 @@ export const initialBooks = [
     category: "Classic",
     status: "Available",
     year: 1943,
-    description: "A beloved fable on wonder, imagination, and the heart of childhood.",
+    description:
+      "A beloved fable on wonder, imagination, and the heart of childhood.",
   },
   {
     id: "BK-128",
@@ -281,7 +304,8 @@ export const initialBooks = [
     category: "Business",
     status: "Archived",
     year: 2022,
-    description: "A practical overview of sustainable revenue strategies and market traction.",
+    description:
+      "A practical overview of sustainable revenue strategies and market traction.",
   },
 ];
 
@@ -325,11 +349,15 @@ function BookCatalog() {
   const booksWithLoanStatus = useMemo(
     () =>
       books.map((book) => {
-        const relatedLoans = loans.filter(
-          (loan) => loanMatchesBook(loan, book)
+        const relatedLoans = loans.filter((loan) =>
+          loanMatchesBook(loan, book),
         );
-        const hasActiveLoan = relatedLoans.some((loan) => loan.status !== "Returned");
-        const hasReturnedLoan = relatedLoans.some((loan) => loan.status === "Returned");
+        const hasActiveLoan = relatedLoans.some(
+          (loan) => loan.status !== "Returned",
+        );
+        const hasReturnedLoan = relatedLoans.some(
+          (loan) => loan.status === "Returned",
+        );
 
         if (hasActiveLoan) {
           return { ...book, status: "Borrowed" };
@@ -341,12 +369,31 @@ function BookCatalog() {
 
         return book;
       }),
-    [books, loans]
+    [books, loans],
   );
 
   const categories = useMemo(
-    () => ["All Categories", ...new Set(booksWithLoanStatus.map((book) => book.category))],
-    [booksWithLoanStatus]
+    () =>
+      Array.from(
+        new Set([
+          ...booksWithLoanStatus.map((book) => book.category),
+          "Fiction",
+          "Technology",
+          "Business",
+          "Science Fiction",
+          "Psychology",
+          "Finance",
+          "History",
+          "Fantasy",
+          "Classic",
+          "Productivity",
+          "Self-Improvement",
+          "Biography",
+          "Philosophy",
+          "Design",
+        ]),
+      ),
+    [booksWithLoanStatus],
   );
 
   const filteredBooks = useMemo(() => {
@@ -357,7 +404,8 @@ function BookCatalog() {
 
     return booksWithLoanStatus.filter((book) => {
       const matchesTitle = !qTitle || book.title.toLowerCase().includes(qTitle);
-      const matchesAuthor = !qAuthor || book.author.toLowerCase().includes(qAuthor);
+      const matchesAuthor =
+        !qAuthor || book.author.toLowerCase().includes(qAuthor);
       const matchesIsbn = !qIsbn || book.isbn.toLowerCase().includes(qIsbn);
       const matchesBookId = !qBookId || book.id.toLowerCase().includes(qBookId);
       const matchesStatus =
@@ -371,7 +419,14 @@ function BookCatalog() {
         matchesStatus
       );
     });
-  }, [booksWithLoanStatus, searchAuthor, searchBookId, searchIsbn, searchTitle, statusFilter]);
+  }, [
+    booksWithLoanStatus,
+    searchAuthor,
+    searchBookId,
+    searchIsbn,
+    searchTitle,
+    statusFilter,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBooks.length / PAGE_SIZE));
   const displayPage = Math.min(currentPage, totalPages);
@@ -426,7 +481,10 @@ function BookCatalog() {
   };
 
   const generateNextBookId = () => {
-    const lastId = books.reduce((maxId, book) => Math.max(maxId, getNumericBookId(book.id)), 0);
+    const lastId = books.reduce(
+      (maxId, book) => Math.max(maxId, getNumericBookId(book.id)),
+      0,
+    );
     return `BK-${String(lastId + 1).padStart(3, "0")}`;
   };
 
@@ -587,8 +645,9 @@ function BookCatalog() {
         .modal-form input:focus,
         .modal-form select:focus,
         .modal-form textarea:focus {
-          outline: 2px solid rgba(51, 78, 104, 0.18);
-          border-color: #b9c8d8;
+          outline: none;
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
           background: #ffffff;
         }
 
@@ -976,7 +1035,11 @@ function BookCatalog() {
               <p>Manage the library collection and inventory.</p>
             </div>
 
-            <button type="button" className="catalog-add-btn" onClick={openAddModal}>
+            <button
+              type="button"
+              className="catalog-add-btn"
+              onClick={openAddModal}
+            >
               + Add Book
             </button>
           </div>
@@ -988,7 +1051,10 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchTitle}
-                  onChange={(event) => { setSearchTitle(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setSearchTitle(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Title"
                 />
               </label>
@@ -998,7 +1064,10 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchAuthor}
-                  onChange={(event) => { setSearchAuthor(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setSearchAuthor(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Author"
                 />
               </label>
@@ -1008,7 +1077,10 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchIsbn}
-                  onChange={(event) => { setSearchIsbn(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setSearchIsbn(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="ISBN"
                 />
               </label>
@@ -1018,7 +1090,10 @@ function BookCatalog() {
                 <input
                   type="text"
                   value={searchBookId}
-                  onChange={(event) => { setSearchBookId(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setSearchBookId(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="BK-101"
                 />
               </label>
@@ -1027,12 +1102,12 @@ function BookCatalog() {
                 <span>Status</span>
                 <select
                   value={statusFilter}
-                  onChange={(event) => { setStatusFilter(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setStatusFilter(event.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
-                  {[
-                    "All Statuses",
-                    ...BOOK_STATUS_OPTIONS,
-                  ].map((status) => (
+                  {["All Statuses", ...BOOK_STATUS_OPTIONS].map((status) => (
                     <option key={status} value={status}>
                       {status}
                     </option>
@@ -1047,8 +1122,9 @@ function BookCatalog() {
               <div className="catalog-empty-state">
                 <h3>No books found</h3>
                 <p>
-                  There are no matching books for the current search and filter settings.
-                  Try another keyword or add a new title to the collection.
+                  There are no matching books for the current search and filter
+                  settings. Try another keyword or add a new title to the
+                  collection.
                 </p>
               </div>
             ) : (
@@ -1070,7 +1146,9 @@ function BookCatalog() {
                       <td>
                         <div className="catalog-book-meta">
                           <p className="catalog-book-title">{book.title}</p>
-                          <p className="catalog-book-author">by {book.author}</p>
+                          <p className="catalog-book-author">
+                            by {book.author}
+                          </p>
                         </div>
                       </td>
 
@@ -1081,7 +1159,9 @@ function BookCatalog() {
                       <td>{book.category}</td>
 
                       <td>
-                        <span className={formatStatusClass(book.status)}>{book.status}</span>
+                        <span className={formatStatusClass(book.status)}>
+                          {book.status}
+                        </span>
                       </td>
 
                       <td>
@@ -1138,20 +1218,30 @@ function BookCatalog() {
           {filteredBooks.length > 0 && (
             <div className="catalog-footer">
               <span>
-                Showing {(currentPage - 1) * PAGE_SIZE + 1} - {Math.min(currentPage * PAGE_SIZE, filteredBooks.length)} of {filteredBooks.length} books
+                Showing {(currentPage - 1) * PAGE_SIZE + 1} -{" "}
+                {Math.min(currentPage * PAGE_SIZE, filteredBooks.length)} of{" "}
+                {filteredBooks.length} books
               </span>
 
-              <div className="catalog-pagination" aria-label="Pagination navigation">
+              <div
+                className="catalog-pagination"
+                aria-label="Pagination navigation"
+              >
                 <button
                   type="button"
                   className="catalog-pagination-button"
-                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                  onClick={() =>
+                    setCurrentPage((page) => Math.max(1, page - 1))
+                  }
                   disabled={currentPage === 1}
                 >
                   Prev
                 </button>
 
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1,
+                ).map((page) => (
                   <button
                     key={page}
                     type="button"
@@ -1165,7 +1255,9 @@ function BookCatalog() {
                 <button
                   type="button"
                   className="catalog-pagination-button"
-                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                  onClick={() =>
+                    setCurrentPage((page) => Math.min(totalPages, page + 1))
+                  }
                   disabled={currentPage === totalPages}
                 >
                   Next
@@ -1178,10 +1270,20 @@ function BookCatalog() {
         {modalType && (
           <div className="catalog-modal-backdrop" role="presentation">
             {modalType === "add" || modalType === "edit" ? (
-              <div className="catalog-modal" role="dialog" aria-modal="true" aria-label={modalType === "add" ? "Add Book" : "Edit Book"}>
+              <div
+                className="catalog-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-label={modalType === "add" ? "Add Book" : "Edit Book"}
+              >
                 <div className="catalog-modal-header">
                   <h3>{modalType === "add" ? "Add New Book" : "Edit Book"}</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal} aria-label="Close dialog">
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                    aria-label="Close dialog"
+                  >
                     ×
                   </button>
                 </div>
@@ -1230,19 +1332,46 @@ function BookCatalog() {
 
                   <label>
                     Category
-                    <select name="category" value={formData.category} onChange={handleInputChange}>
-                      {Array.from(new Set([...categories.filter((category) => category !== "All Categories"), "Fiction", "Technology", "Business", "Science Fiction", "Psychology", "Finance", "History", "Fantasy", "Classic", "Productivity", "Self-Improvement", "Biography", "Philosophy", "Design"]))
-                        .map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                    >
+                      {Array.from(
+                        new Set([
+                          ...categories.filter(
+                            (category) => category !== "All Categories",
+                          ),
+                          "Fiction",
+                          "Technology",
+                          "Business",
+                          "Science Fiction",
+                          "Psychology",
+                          "Finance",
+                          "History",
+                          "Fantasy",
+                          "Classic",
+                          "Productivity",
+                          "Self-Improvement",
+                          "Biography",
+                          "Philosophy",
+                          "Design",
+                        ]),
+                      ).map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
                     </select>
                   </label>
 
                   <label>
                     Status
-                    <select name="status" value={formData.status} onChange={handleInputChange}>
+                    <select
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                    >
                       {BOOK_STATUS_OPTIONS.map((status) => (
                         <option key={status} value={status}>
                           {status}
@@ -1275,10 +1404,18 @@ function BookCatalog() {
                 </div>
 
                 <div className="modal-actions">
-                  <button type="button" className="modal-action-btn modal-action-btn--secondary" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-action-btn modal-action-btn--secondary"
+                    onClick={closeModal}
+                  >
                     Cancel
                   </button>
-                  <button type="button" className="modal-action-btn" onClick={handleSaveBook}>
+                  <button
+                    type="button"
+                    className="modal-action-btn"
+                    onClick={handleSaveBook}
+                  >
                     {modalType === "add" ? "Add Book" : "Save Changes"}
                   </button>
                 </div>
@@ -1286,10 +1423,20 @@ function BookCatalog() {
             ) : null}
 
             {modalType === "view" && selectedBook ? (
-              <div className="catalog-modal catalog-modal--detail" role="dialog" aria-modal="true" aria-label="View Book Details">
+              <div
+                className="catalog-modal catalog-modal--detail"
+                role="dialog"
+                aria-modal="true"
+                aria-label="View Book Details"
+              >
                 <div className="catalog-modal-header">
                   <h3>Book Details</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal} aria-label="Close dialog">
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                    aria-label="Close dialog"
+                  >
                     ×
                   </button>
                 </div>
@@ -1297,7 +1444,9 @@ function BookCatalog() {
                 <div className="modal-detail-card">
                   <div className="modal-detail-header">
                     <h3>{selectedBook.title}</h3>
-                    <span className={formatStatusClass(selectedBook.status)}>{selectedBook.status}</span>
+                    <span className={formatStatusClass(selectedBook.status)}>
+                      {selectedBook.status}
+                    </span>
                   </div>
 
                   <div className="modal-detail-grid">
@@ -1333,13 +1482,20 @@ function BookCatalog() {
 
                     <div className="detail-item detail-item--full">
                       <label>Description</label>
-                      <p>{selectedBook.description || "No description available."}</p>
+                      <p>
+                        {selectedBook.description ||
+                          "No description available."}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="modal-actions">
-                  <button type="button" className="modal-action-btn modal-action-btn--secondary" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-action-btn modal-action-btn--secondary"
+                    onClick={closeModal}
+                  >
                     Close
                   </button>
                 </div>
@@ -1347,27 +1503,53 @@ function BookCatalog() {
             ) : null}
 
             {modalType === "delete" && selectedBook ? (
-              <div className="catalog-modal catalog-modal--delete" role="dialog" aria-modal="true" aria-label="Delete Book">
+              <div
+                className="catalog-modal catalog-modal--delete"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Delete Book"
+              >
                 <div className="catalog-modal-header">
                   <h3>Delete Book</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal} aria-label="Close dialog">
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                    aria-label="Close dialog"
+                  >
                     ×
                   </button>
                 </div>
 
                 <div className="modal-detail-card">
-                  <p style={{ margin: 0, fontSize: 16, color: '#20364a', lineHeight: 1.6 }}>
-                    Are you sure you want to delete <strong>{selectedBook.title}</strong> ({selectedBook.id})?
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 16,
+                      color: "#20364a",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Are you sure you want to delete{" "}
+                    <strong>{selectedBook.title}</strong> ({selectedBook.id})?
                     This action cannot be undone.
                   </p>
                   {deleteError && <p className="form-error">{deleteError}</p>}
                 </div>
 
                 <div className="modal-actions">
-                  <button type="button" className="modal-action-btn modal-action-btn--secondary" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-action-btn modal-action-btn--secondary"
+                    onClick={closeModal}
+                  >
                     Cancel
                   </button>
-                  <button type="button" className="modal-delete-btn" onClick={handleDeleteBook}>
+                  <button
+                    type="button"
+                    className="modal-delete-btn"
+                    onClick={handleDeleteBook}
+                  >
                     Delete Book
                   </button>
                 </div>

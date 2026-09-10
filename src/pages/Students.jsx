@@ -164,7 +164,9 @@ export const initialStudents = [
     enrollmentDate: "2024-09-01",
     status: "Active",
     booksOut: 1,
-    borrowedBooks: [{ title: "The Secret of the Blue Land", dueDate: "2026-09-23" }],
+    borrowedBooks: [
+      { title: "The Secret of the Blue Land", dueDate: "2026-09-23" },
+    ],
   },
   {
     id: "ST-113",
@@ -270,7 +272,9 @@ export const initialStudents = [
     enrollmentDate: "2025-08-15",
     status: "Active",
     booksOut: 1,
-    borrowedBooks: [{ title: "The Wonderful Wizard of Oz", dueDate: "2026-09-13" }],
+    borrowedBooks: [
+      { title: "The Wonderful Wizard of Oz", dueDate: "2026-09-13" },
+    ],
   },
 ];
 
@@ -295,7 +299,13 @@ const GRADE_OPTIONS = [
   "Grade 12",
 ];
 
-const STATUS_OPTIONS = ["All Statuses", "Active", "On Leave", "Inactive", "Pending"];
+const STATUS_OPTIONS = [
+  "All Statuses",
+  "Active",
+  "On Leave",
+  "Inactive",
+  "Pending",
+];
 
 const formatDisplayDate = (value) => {
   if (!value) {
@@ -367,13 +377,8 @@ const getNumericStudentId = (studentId) => {
 };
 
 function Students() {
-  const {
-    students,
-    loans,
-    addStudent,
-    updateStudent,
-    deleteStudent,
-  } = useLibraryData();
+  const { students, loans, addStudent, updateStudent, deleteStudent } =
+    useLibraryData();
   const [searchTerm, setSearchTerm] = useState("");
   const [gradeFilter, setGradeFilter] = useState("All Grades");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
@@ -388,7 +393,10 @@ function Students() {
     () =>
       students.map((student) => {
         const borrowedBooks = loans
-          .filter((loan) => loan.studentId === student.id && loan.status !== "Returned")
+          .filter(
+            (loan) =>
+              loan.studentId === student.id && loan.status !== "Returned",
+          )
           .map((loan) => ({ title: loan.bookTitle, dueDate: loan.dueDate }));
 
         return {
@@ -397,7 +405,7 @@ function Students() {
           borrowedBooks,
         };
       }),
-    [loans, students]
+    [loans, students],
   );
 
   const filteredStudents = useMemo(() => {
@@ -410,17 +418,25 @@ function Students() {
         student.email.toLowerCase().includes(query) ||
         student.id.toLowerCase().includes(query);
 
-      const matchesGrade = gradeFilter === "All Grades" || student.grade === gradeFilter;
-      const matchesStatus = statusFilter === "All Statuses" || student.status === statusFilter;
+      const matchesGrade =
+        gradeFilter === "All Grades" || student.grade === gradeFilter;
+      const matchesStatus =
+        statusFilter === "All Statuses" || student.status === statusFilter;
 
       return matchesQuery && matchesGrade && matchesStatus;
     });
   }, [studentsWithLoans, searchTerm, gradeFilter, statusFilter]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredStudents.length / PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredStudents.length / PAGE_SIZE),
+  );
   const displayPage = Math.min(currentPage, totalPages);
   const startIndex = (displayPage - 1) * PAGE_SIZE;
-  const visibleStudents = filteredStudents.slice(startIndex, startIndex + PAGE_SIZE);
+  const visibleStudents = filteredStudents.slice(
+    startIndex,
+    startIndex + PAGE_SIZE,
+  );
 
   const openAddModal = () => {
     setFormData({
@@ -480,7 +496,7 @@ function Students() {
   const generateNextStudentId = () => {
     const lastId = students.reduce(
       (maxId, student) => Math.max(maxId, getNumericStudentId(student.id)),
-      0
+      0,
     );
 
     return `ST-${String(lastId + 1).padStart(3, "0")}`;
@@ -495,7 +511,8 @@ function Students() {
       grade: formData.grade || "Grade 9",
       status: formData.status || "Active",
       parentName: formData.parentName.trim(),
-      enrollmentDate: formData.enrollmentDate || new Date().toISOString().slice(0, 10),
+      enrollmentDate:
+        formData.enrollmentDate || new Date().toISOString().slice(0, 10),
     };
 
     if (!trimmedData.fullName || !trimmedData.email) {
@@ -615,19 +632,28 @@ function Students() {
         .students-summary {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 16px;
+          gap: 24px;
           padding: 20px 24px 0;
         }
 
         .students-summary-card {
           display: flex;
           align-items: center;
-          justify-content: space-between;
           gap: 18px;
           background: #f8fbff;
           border: 1px solid #e9f0f6;
           border-radius: 12px;
           padding: 18px 20px;
+        }
+
+        .students-summary-card--count {
+          background: #f4f8ff;
+          border-color: #dbe8fb;
+        }
+
+        .students-summary-card--enrolled {
+          background: #f3fbf7;
+          border-color: #d9eee2;
         }
 
         .students-summary-main {
@@ -676,39 +702,30 @@ function Students() {
 
         .students-summary-value {
           margin: 7px 0 0;
-          color: #1f3448;
+          color: #173b68;
           font-size: 28px;
           font-weight: 700;
           line-height: 1.1;
         }
 
-        .students-summary-pill {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 52px;
-          padding: 8px 10px;
-          border-radius: 999px;
-          background: #eaf2ff;
-          color: #355c96;
-          font-size: 12px;
-          font-weight: 700;
+        .students-summary-card--enrolled .students-summary-value {
+          color: #176344;
         }
 
         .students-controls {
-          display: flex;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
           align-items: end;
-          justify-content: space-between;
-          gap: 16px;
+          column-gap: 24px;
+          row-gap: 16px;
           padding: 20px 24px 0;
-          flex-wrap: wrap;
         }
 
         .students-search-wrap {
           display: flex;
-          flex: 1;
-          min-width: 240px;
-          max-width: 500px;
+          width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
           gap: 12px;
           align-items: center;
           padding: 10px 14px;
@@ -719,8 +736,8 @@ function Students() {
         }
 
         .students-search-wrap:focus-within {
-          border-color: rgba(74, 144, 226, 0.42);
-          box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.10);
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
         }
 
         .students-search-wrap input,
@@ -751,7 +768,13 @@ function Students() {
         }
 
         .students-search-wrap input:focus,
-        .students-search-wrap input:focus-visible,
+        .students-search-wrap input:focus-visible {
+          outline: none;
+          border: none;
+          box-shadow: none;
+          background: transparent;
+        }
+
         .students-filter select:focus,
         .students-filter select:focus-visible,
         .modal-form input:focus,
@@ -761,23 +784,24 @@ function Students() {
         .modal-form textarea:focus,
         .modal-form textarea:focus-visible {
           outline: none;
-          border: none;
-          box-shadow: none;
-          background: transparent;
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+          background: #ffffff;
         }
 
         .students-filter-group {
           display: flex;
           align-items: center;
           gap: 12px;
-          flex-wrap: wrap;
+          width: 100%;
         }
 
         .students-filter {
           display: flex;
           flex-direction: column;
           gap: 8px;
-          min-width: 180px;
+          flex: 1 1 0;
+          min-width: 0;
         }
 
         .students-filter label {
@@ -1224,7 +1248,6 @@ function Students() {
           }
 
           .students-page-header,
-          .students-controls,
           .students-summary,
           .students-footer {
             flex-direction: column;
@@ -1240,7 +1263,13 @@ function Students() {
           }
 
           .students-search-wrap {
+            width: 100%;
+            min-width: 0;
             max-width: none;
+          }
+
+          .students-controls {
+            grid-template-columns: 1fr;
           }
 
           .students-filter-group,
@@ -1265,30 +1294,47 @@ function Students() {
           <header className="students-page-header">
             <div>
               <h2>Students</h2>
-              <p>Manage student accounts, enrollment records, and borrowing activity.</p>
+              <p>
+                Manage student accounts, enrollment records, and borrowing
+                activity.
+              </p>
             </div>
-            <button type="button" className="students-add-btn" onClick={openAddModal}>
+            <button
+              type="button"
+              className="students-add-btn"
+              onClick={openAddModal}
+            >
               + Add Student
             </button>
           </header>
 
-          <section className="students-summary" aria-label="Student summary metrics">
-            <div className="students-summary-card">
+          <section
+            className="students-summary"
+            aria-label="Student summary metrics"
+          >
+            <div className="students-summary-card students-summary-card--count">
               <div className="students-summary-main">
-                <span className="students-summary-icon students-summary-icon--blue" aria-hidden="true">
+                <span
+                  className="students-summary-icon students-summary-icon--blue"
+                  aria-hidden="true"
+                >
                   <PeopleIcon />
                 </span>
                 <div>
                   <p className="students-summary-label">Student Count</p>
-                  <p className="students-summary-value">{filteredStudents.length}</p>
+                  <p className="students-summary-value">
+                    {filteredStudents.length}
+                  </p>
                 </div>
               </div>
-              <span className="students-summary-pill">{filteredStudents.length}</span>
             </div>
 
-            <div className="students-summary-card">
+            <div className="students-summary-card students-summary-card--enrolled">
               <div className="students-summary-main">
-                <span className="students-summary-icon students-summary-icon--green" aria-hidden="true">
+                <span
+                  className="students-summary-icon students-summary-icon--green"
+                  aria-hidden="true"
+                >
                   <GraduationCapIcon />
                 </span>
                 <div>
@@ -1296,7 +1342,6 @@ function Students() {
                   <p className="students-summary-value">{students.length}</p>
                 </div>
               </div>
-              <span className="students-summary-pill">{students.length}</span>
             </div>
           </section>
 
@@ -1306,7 +1351,10 @@ function Students() {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(event) => { setSearchTerm(event.target.value); setCurrentPage(1); }}
+                onChange={(event) => {
+                  setSearchTerm(event.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder="Search student name, email, or student ID"
                 aria-label="Search students"
               />
@@ -1318,7 +1366,10 @@ function Students() {
                 <select
                   id="grade-filter"
                   value={gradeFilter}
-                  onChange={(event) => { setGradeFilter(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setGradeFilter(event.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
                   {GRADE_OPTIONS.map((grade) => (
                     <option key={grade} value={grade}>
@@ -1333,7 +1384,10 @@ function Students() {
                 <select
                   id="status-filter"
                   value={statusFilter}
-                  onChange={(event) => { setStatusFilter(event.target.value); setCurrentPage(1); }}
+                  onChange={(event) => {
+                    setStatusFilter(event.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -1379,12 +1433,18 @@ function Students() {
                       </td>
 
                       <td className="student-grade">{student.grade}</td>
-                      <td className="student-enrolled">{formatDisplayDate(student.enrollmentDate)}</td>
-                      <td>
-                        <span className="student-books-out">{student.booksOut}</span>
+                      <td className="student-enrolled">
+                        {formatDisplayDate(student.enrollmentDate)}
                       </td>
                       <td>
-                        <span className={getStatusClass(student.status)}>{student.status}</span>
+                        <span className="student-books-out">
+                          {student.booksOut}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={getStatusClass(student.status)}>
+                          {student.status}
+                        </span>
                       </td>
                       <td>
                         <div className="students-action-group">
@@ -1425,7 +1485,8 @@ function Students() {
                       <div className="students-empty-state">
                         <h3>No students found</h3>
                         <p>
-                          Try adjusting your search or filters to find a different student record.
+                          Try adjusting your search or filters to find a
+                          different student record.
                         </p>
                       </div>
                     </td>
@@ -1437,10 +1498,15 @@ function Students() {
 
           <footer className="students-footer">
             <span>
-              Showing {filteredStudents.length === 0 ? 0 : startIndex + 1}-{Math.min(startIndex + PAGE_SIZE, filteredStudents.length)} of {filteredStudents.length} students
+              Showing {filteredStudents.length === 0 ? 0 : startIndex + 1}-
+              {Math.min(startIndex + PAGE_SIZE, filteredStudents.length)} of{" "}
+              {filteredStudents.length} students
             </span>
 
-            <div className="students-pagination" aria-label="Student pagination">
+            <div
+              className="students-pagination"
+              aria-label="Student pagination"
+            >
               <button
                 type="button"
                 className="students-pagination-button"
@@ -1450,22 +1516,26 @@ function Students() {
                 Prev
               </button>
 
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  type="button"
-                  className={`students-pagination-button ${pageNumber === displayPage ? "is-active" : ""}`}
-                  onClick={() => setCurrentPage(pageNumber)}
-                >
-                  {pageNumber}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    type="button"
+                    className={`students-pagination-button ${pageNumber === displayPage ? "is-active" : ""}`}
+                    onClick={() => setCurrentPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ),
+              )}
 
               <button
                 type="button"
                 className="students-pagination-button"
                 disabled={displayPage === totalPages}
-                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                onClick={() =>
+                  setCurrentPage((page) => Math.min(totalPages, page + 1))
+                }
               >
                 Next
               </button>
@@ -1485,8 +1555,14 @@ function Students() {
             {modalType === "add" || modalType === "edit" ? (
               <>
                 <div className="students-modal-header">
-                  <h3>{modalType === "add" ? "Add Student" : "Edit Student"}</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal}>
+                  <h3>
+                    {modalType === "add" ? "Add Student" : "Edit Student"}
+                  </h3>
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                  >
                     ×
                   </button>
                 </div>
@@ -1527,8 +1603,14 @@ function Students() {
 
                   <label>
                     Grade
-                    <select name="grade" value={formData.grade} onChange={handleInputChange}>
-                      {GRADE_OPTIONS.filter((grade) => grade !== "All Grades").map((grade) => (
+                    <select
+                      name="grade"
+                      value={formData.grade}
+                      onChange={handleInputChange}
+                    >
+                      {GRADE_OPTIONS.filter(
+                        (grade) => grade !== "All Grades",
+                      ).map((grade) => (
                         <option key={grade} value={grade}>
                           {grade}
                         </option>
@@ -1538,8 +1620,14 @@ function Students() {
 
                   <label>
                     Status
-                    <select name="status" value={formData.status} onChange={handleInputChange}>
-                      {STATUS_OPTIONS.filter((status) => status !== "All Statuses").map((status) => (
+                    <select
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                    >
+                      {STATUS_OPTIONS.filter(
+                        (status) => status !== "All Statuses",
+                      ).map((status) => (
                         <option key={status} value={status}>
                           {status}
                         </option>
@@ -1572,10 +1660,18 @@ function Students() {
                 {formError && <p className="form-error">{formError}</p>}
 
                 <div className="modal-actions">
-                  <button type="button" className="modal-secondary-btn" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-secondary-btn"
+                    onClick={closeModal}
+                  >
                     Cancel
                   </button>
-                  <button type="button" className="modal-action-btn" onClick={handleSaveStudent}>
+                  <button
+                    type="button"
+                    className="modal-action-btn"
+                    onClick={handleSaveStudent}
+                  >
                     {modalType === "add" ? "Add Student" : "Save Changes"}
                   </button>
                 </div>
@@ -1586,7 +1682,11 @@ function Students() {
               <>
                 <div className="students-modal-header">
                   <h3>Student Profile</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                  >
                     ×
                   </button>
                 </div>
@@ -1632,11 +1732,13 @@ function Students() {
 
                     <div className="detail-item full-width">
                       <label>Currently Borrowed Books</label>
-                      {selectedStudent.borrowedBooks && selectedStudent.borrowedBooks.length > 0 ? (
+                      {selectedStudent.borrowedBooks &&
+                      selectedStudent.borrowedBooks.length > 0 ? (
                         <ul className="borrowed-books-list">
                           {selectedStudent.borrowedBooks.map((book) => (
                             <li key={`${selectedStudent.id}-${book.title}`}>
-                              {book.title} — Due {formatDisplayDate(book.dueDate)}
+                              {book.title} — Due{" "}
+                              {formatDisplayDate(book.dueDate)}
                             </li>
                           ))}
                         </ul>
@@ -1653,24 +1755,37 @@ function Students() {
               <>
                 <div className="students-modal-header">
                   <h3>Delete Student</h3>
-                  <button type="button" className="modal-close-btn" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-close-btn"
+                    onClick={closeModal}
+                  >
                     ×
                   </button>
                 </div>
 
                 <div className="students-delete-content">
                   <p>
-                    Are you sure you want to delete <strong>{selectedStudent.fullName}</strong> ({selectedStudent.id})?
-                    This action cannot be undone.
+                    Are you sure you want to delete{" "}
+                    <strong>{selectedStudent.fullName}</strong> (
+                    {selectedStudent.id})? This action cannot be undone.
                   </p>
                   {deleteError && <p className="form-error">{deleteError}</p>}
                 </div>
 
                 <div className="modal-actions">
-                  <button type="button" className="modal-secondary-btn" onClick={closeModal}>
+                  <button
+                    type="button"
+                    className="modal-secondary-btn"
+                    onClick={closeModal}
+                  >
                     Cancel
                   </button>
-                  <button type="button" className="modal-delete-btn" onClick={handleDeleteStudent}>
+                  <button
+                    type="button"
+                    className="modal-delete-btn"
+                    onClick={handleDeleteStudent}
+                  >
                     Delete Student
                   </button>
                 </div>
