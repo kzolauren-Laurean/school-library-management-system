@@ -6,9 +6,14 @@ import Students, { initialStudents } from "./pages/Students";
 import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
+import Settings from "./pages/Settings";
+import { defaultSettings } from "./pages/settingsDefaults";
+import "./theme.css";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const [savedSettings, setSavedSettings] = useState(defaultSettings);
+  const [theme, setTheme] = useState(defaultSettings.theme);
 
   const getPageTitle = () => {
     if (currentPage === "book-catalog") {
@@ -25,6 +30,10 @@ function App() {
 
     if (currentPage === "borrowing") {
       return "Borrowing";
+    }
+
+    if (currentPage === "settings") {
+      return "Settings";
     }
 
     return "Dashboard";
@@ -47,17 +56,27 @@ function App() {
       return <Borrowing onNavigate={setCurrentPage} />;
     }
 
+    if (currentPage === "settings") {
+      return <Settings initialSettings={savedSettings} onSave={setSavedSettings} onThemeChange={(nextTheme) => {
+        setTheme(nextTheme);
+        setSavedSettings((currentSettings) => ({ ...currentSettings, theme: nextTheme }));
+      }} />;
+    }
+
     return <Dashboard />;
   };
 
   const pageSubtitle = currentPage === "returns"
     ? "Process book returns"
-    : currentPage === "borrowing"
+      : currentPage === "borrowing"
       ? "Track active book loans"
+      : currentPage === "settings"
+        ? "Manage your library preferences"
       : undefined;
 
   return (
     <LibraryDataProvider initialBooks={initialBooks} initialStudents={initialStudents}>
+      <div className={`app-theme app-theme--${theme}`}>
       <Layout
         currentPage={currentPage}
         onNavigate={setCurrentPage}
@@ -66,6 +85,7 @@ function App() {
       >
         {renderPage()}
       </Layout>
+      </div>
     </LibraryDataProvider>
   );
 }
