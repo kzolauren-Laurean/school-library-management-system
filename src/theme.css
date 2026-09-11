@@ -1,0 +1,635 @@
+/* Application-wide dark overrides. Light styles remain the source of truth. */
+.app-theme--dark {
+  --theme-page: #132238;
+  --theme-surface: #1a2d45;
+  --theme-control: #213a56;
+  --theme-border: #29415d;
+  --theme-text: #eff6ff;
+  --theme-muted: #a8bfd9;
+  background: var(--theme-page);
+  color: var(--theme-text);
+  color-scheme: dark;
+}
+
+.app-theme--dark .app-header {
+  background: var(--theme-surface);
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark .header-title {
+  color: var(--theme-text);
+}
+.app-theme--dark .header-date {
+  color: var(--theme-muted);
+}
+.app-theme--dark .header-search,
+.app-theme--dark .header-notification-btn {
+  background: var(--theme-control);
+  border-color: #41607e;
+}
+.app-theme--dark .header-search-input {
+  color: var(--theme-text);
+}
+.app-theme--dark .header-search:focus-within {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+  background: var(--theme-control);
+}
+.app-theme--dark .icon-bell::before {
+  border-color: var(--theme-muted);
+}
+.app-theme--dark .icon-bell::after {
+  background: var(--theme-muted);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard,
+    .book-catalog-page,
+    .students-page,
+    .borrowing-page,
+    .returns-page
+  ) {
+  background: var(--theme-page);
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard-stat-card,
+    .dashboard-card,
+    .book-catalog-panel,
+    .catalog-modal,
+    .students-panel,
+    .students-summary-card,
+    .students-detail-card,
+    .students-modal,
+    .students-delete-content,
+    .borrowing-panel,
+    .borrowing-summary-card,
+    .borrowing-modal,
+    .borrowing-option,
+    .borrowing-summary-box,
+    .returns-panel,
+    .returns-summary-card,
+    .returns-modal
+  ) {
+  background: var(--theme-surface);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(
+    input,
+    select,
+    textarea,
+    .catalog-filters,
+    .catalog-search-grid,
+    .students-search-wrap,
+    .students-filter,
+    .students-filter-group,
+    .borrowing-search,
+    .borrowing-filter select,
+    .returns-search,
+    .returns-filter select,
+    .catalog-pagination-button,
+    .students-pagination-button,
+    .borrowing-page-button,
+    .returns-page-button,
+    .borrowing-close,
+    .returns-modal-close
+  ) {
+  background: var(--theme-control);
+  border-color: #41607e;
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(.catalog-field, .students-filter, .returns-filter, .borrowing-filter)
+  :is(label, span) {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+.app-theme--dark
+  :is(
+    select,
+    .students-modal select,
+    .borrowing-modal select,
+    .returns-filter select,
+    .students-filter select
+  ) {
+  color-scheme: dark;
+  background: var(--theme-control);
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard,
+    .book-catalog-page,
+    .students-page,
+    .borrowing-page,
+    .returns-page
+  )
+  :is(h2, h3, h4, strong, th, td) {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard,
+    .book-catalog-page,
+    .students-page,
+    .borrowing-page,
+    .returns-page
+  )
+  :is(
+    p,
+    small,
+    [class*="subtitle"],
+    [class*="helper"],
+    [class*="meta"],
+    [class*="author"],
+    [class*="id"],
+    [class*="label"],
+    [class*="footer"]
+  ) {
+  color: var(--theme-muted);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard-table,
+    .catalog-table,
+    .students-table,
+    .borrowing-table,
+    .returns-table
+  )
+  :is(th, td) {
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark
+  :is(
+    .dashboard-table,
+    .catalog-table,
+    .students-table,
+    .borrowing-table,
+    .returns-table
+  )
+  th {
+  color: var(--theme-muted);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-modal-header,
+    .students-modal-header,
+    .borrowing-modal-header,
+    .returns-modal-header,
+    .catalog-modal-actions,
+    .students-modal-actions,
+    .borrowing-modal-actions,
+    .returns-modal-actions
+  ) {
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-empty-state,
+    .students-empty-state,
+    .borrowing-empty,
+    .returns-empty
+  ) {
+  color: var(--theme-muted);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-field,
+    .students-detail-grid,
+    .borrowing-option,
+    .borrowing-summary-box
+  ) {
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(
+    label,
+    .catalog-field,
+    .students-filter,
+    .borrowing-filter,
+    .returns-filter
+  ) {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(input, textarea, select)::placeholder {
+  color: var(--theme-muted);
+  opacity: 1;
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(input, textarea, select):focus {
+  outline: none;
+  border-color: #4c98ff;
+  box-shadow: 0 0 0 3px rgba(76, 152, 255, 0.18);
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(input, textarea, select):disabled,
+.app-theme--dark
+  :is(
+    .catalog-pagination-button,
+    .students-pagination-button,
+    .borrowing-page-button,
+    .returns-page-button
+  ):disabled {
+  color: var(--theme-muted);
+  opacity: 0.55;
+}
+
+.app-theme--dark
+  :is(
+    .dashboard-avatar,
+    .catalog-book-icon,
+    .catalog-action-icon,
+    .students-summary-icon,
+    .students-avatar,
+    .borrowing-summary-icon,
+    .borrowing-avatar,
+    .borrowing-option-avatar,
+    .returns-summary-icon,
+    .returns-avatar
+  ) {
+  background: var(--theme-control);
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark .students-summary-card--count {
+  background: #1b3858;
+  border-color: #376995;
+}
+
+.app-theme--dark .students-summary-card--enrolled {
+  background: #193d3a;
+  border-color: #397565;
+}
+
+.app-theme--dark .students-summary-card .students-summary-label {
+  color: #b9d1e9;
+}
+
+.app-theme--dark .students-summary-card--count .students-summary-value {
+  color: #e1efff;
+}
+
+.app-theme--dark .students-summary-card--enrolled .students-summary-value {
+  color: #d9f7e5;
+}
+
+.app-theme--dark .students-summary-card--count .students-summary-icon {
+  background: #244d78;
+  color: #8fc4ff;
+}
+
+.app-theme--dark .students-summary-card--enrolled .students-summary-icon {
+  background: #286050;
+  color: #8ce0b1;
+}
+
+.app-theme--dark
+  :is(
+    .catalog-select-row--selected,
+    .borrowing-option--selected,
+    .borrowing-option[aria-pressed="true"],
+    .students-detail-card--selected
+  ) {
+  background: #173f70;
+  border-color: #4c98ff;
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-select-row--selected,
+    .borrowing-option--selected,
+    .borrowing-option[aria-pressed="true"]
+  )
+  :is(strong, span) {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-action-btn,
+    .students-action-btn,
+    .borrowing-return-button,
+    .returns-button,
+    .catalog-pagination-button,
+    .students-pagination-button,
+    .borrowing-page-button,
+    .returns-page-button
+  ):not(:disabled) {
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark .returns-alert {
+  background: #3a321f;
+  border-color: #725d2d;
+  color: #f2c96d;
+}
+
+.app-theme--dark
+  :is(
+    .catalog-form-error,
+    .students-form-error,
+    .borrowing-form-error,
+    .returns-modal-fine
+  ) {
+  background: rgba(180, 51, 72, 0.16);
+  color: #ff9aaa;
+}
+
+.app-theme--dark
+  :is(
+    .book-status,
+    .student-status,
+    .borrowing-status,
+    .returns-status,
+    .dashboard-status-pill
+  ) {
+  background: var(--theme-control);
+  border: 1px solid var(--theme-border);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-button--view,
+    .students-action-btn--view,
+    .borrowing-modal-secondary,
+    .returns-cancel
+  ) {
+  background: var(--theme-control);
+  color: var(--theme-text);
+}
+
+/* Targeted modal contrast: the detail fields intentionally keep their light cards. */
+.app-theme--dark
+  :is(.catalog-modal--detail, .catalog-modal--delete)
+  .catalog-modal-header
+  h3,
+.app-theme--dark .catalog-modal--detail .modal-detail-header h3,
+.app-theme--dark .catalog-modal--delete .modal-detail-card > p,
+.app-theme--dark .catalog-modal--delete .modal-detail-card > p strong {
+  color: var(--theme-text) !important;
+}
+
+.app-theme--dark
+  :is(.catalog-modal--detail, .catalog-modal--delete)
+  .modal-action-btn--secondary {
+  background: var(--theme-control);
+  border-color: #41607e;
+  color: var(--theme-text);
+}
+
+.app-theme--dark .students-search-wrap {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  background: var(--theme-control);
+  border-color: #41607e;
+}
+
+.app-theme--dark .students-search-wrap input,
+.app-theme--dark .students-search-wrap input:focus,
+.app-theme--dark .students-search-wrap input:focus-visible {
+  min-height: 20px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-theme--dark .students-search-wrap:focus-within {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+}
+
+.app-theme--dark
+  :is(.book-catalog-page, .students-page, .borrowing-page, .returns-page)
+  :is(input, textarea, select):focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+}
+
+.app-theme--dark .students-search-wrap input:focus,
+.app-theme--dark .students-search-wrap input:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.app-theme--dark .students-filter select,
+.app-theme--dark .students-filter select:focus,
+.app-theme--dark .students-filter select:focus-visible {
+  background: transparent;
+  border-color: var(--theme-border);
+  box-shadow: none;
+}
+
+.app-theme--dark :is(.borrowing-search, .returns-search) input:focus,
+.app-theme--dark :is(.borrowing-search, .returns-search) input:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.app-theme--dark .students-filter select {
+  background: transparent;
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.app-theme--dark .students-filter-group {
+  background: transparent;
+  border: 0;
+}
+
+.app-theme--dark .returns-search {
+  flex: 1 1 600px;
+  min-width: 360px;
+  max-width: none;
+}
+
+/* Native menus use a separate browser surface, so give their options explicit contrast. */
+.app-theme--dark
+  :is(
+    .catalog-field select,
+    .students-filter select,
+    .borrowing-filter select,
+    .returns-filter select,
+    .students-modal select,
+    .borrowing-modal select
+  )
+  option {
+  background: #132238;
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(
+    .catalog-field select,
+    .students-filter select,
+    .borrowing-filter select,
+    .returns-filter select,
+    .students-modal select,
+    .borrowing-modal select
+  )
+  option:checked {
+  background: #173f70;
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(.students-modal, .borrowing-modal, .returns-modal)
+  :is(h3, h4, label, strong) {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  :is(.students-modal, .borrowing-modal, .returns-modal)
+  :is(p, small, .borrowing-step, .borrowing-option-copy span) {
+  color: var(--theme-muted);
+}
+
+.app-theme--dark .students-modal,
+.app-theme--dark .borrowing-modal,
+.app-theme--dark .returns-modal {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.3);
+}
+
+.app-theme--dark .students-modal-backdrop,
+.app-theme--dark .borrowing-modal-backdrop,
+.app-theme--dark .returns-modal-backdrop {
+  background: rgba(5, 10, 18, 0.7);
+}
+
+.app-theme--dark .students-modal :is(input, select, textarea),
+.app-theme--dark .borrowing-modal :is(input, select, textarea),
+.app-theme--dark .returns-modal :is(input, select, textarea) {
+  background: var(--theme-control);
+  border-color: #41607e;
+  color: var(--theme-text);
+}
+
+.app-theme--dark .students-modal :is(input, select, textarea)::placeholder,
+.app-theme--dark .borrowing-modal :is(input, select, textarea)::placeholder {
+  color: var(--theme-muted);
+  opacity: 1;
+}
+
+.app-theme--dark .students-modal .modal-form label,
+.app-theme--dark .students-modal .detail-item label,
+.app-theme--dark .students-modal .detail-item p,
+.app-theme--dark .students-modal .students-detail-header h3,
+.app-theme--dark .students-modal .students-modal-header h3,
+.app-theme--dark .students-modal .form-error {
+  color: var(--theme-text);
+}
+
+.app-theme--dark .students-modal .modal-form label {
+  font-weight: 600;
+}
+
+.app-theme--dark .students-modal .detail-item,
+.app-theme--dark .students-modal .students-delete-content,
+.app-theme--dark .students-modal .students-detail-card {
+  background: rgba(11, 19, 31, 0.2);
+  border-color: var(--theme-border);
+}
+
+.app-theme--dark .students-detail-card .detail-item,
+.app-theme--dark .catalog-modal--detail .detail-item {
+  background: rgba(248, 250, 252, 0.98);
+  border-color: #dfe7ef;
+}
+
+.app-theme--dark .borrowing-option {
+  background: var(--theme-control);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.app-theme--dark .borrowing-option:hover {
+  background: #173f70;
+  border-color: #4c98ff;
+}
+
+.app-theme--dark .borrowing-option[aria-pressed="true"] {
+  background: #173f70;
+  border-color: #4c98ff;
+  color: var(--theme-text);
+}
+
+.app-theme--dark .borrowing-option-copy strong,
+.app-theme--dark .borrowing-option-copy span,
+.app-theme--dark .borrowing-option .borrowing-option-avatar,
+.app-theme--dark .borrowing-option > span:last-child {
+  color: var(--theme-text);
+}
+
+.app-theme--dark .borrowing-option-copy span {
+  color: var(--theme-muted);
+}
+
+.app-theme--dark
+  :is(.students-detail-card, .catalog-modal--detail)
+  .detail-item
+  :is(label, p),
+.app-theme--dark .students-detail-card .borrowed-books-list {
+  color: #20364a;
+}
+
+.app-theme--dark .students-delete-content,
+.app-theme--dark .students-delete-content p,
+.app-theme--dark .students-delete-content strong,
+.app-theme--dark .returns-modal-content,
+.app-theme--dark .returns-modal-content p,
+.app-theme--dark .returns-modal-content strong {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  .borrowing-modal
+  :is(.borrowing-option, .borrowing-summary-box)
+  :is(strong, span, div),
+.app-theme--dark
+  .borrowing-modal
+  :is(.borrowing-modal-content, .borrowing-date-grid label) {
+  color: var(--theme-text);
+}
+
+.app-theme--dark
+  .borrowing-modal
+  :is(.borrowing-step--current, .borrowing-step--complete) {
+  color: #a8d0ff;
+  border-color: #4c98ff;
+}

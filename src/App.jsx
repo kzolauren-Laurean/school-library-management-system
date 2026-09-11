@@ -7,9 +7,14 @@ import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import { defaultSettings } from "./pages/settingsDefaults";
+import "./theme.css";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const [savedSettings, setSavedSettings] = useState(defaultSettings);
+  const [theme, setTheme] = useState(defaultSettings.theme);
 
   const getPageTitle = () => {
     if (currentPage === "book-catalog") {
@@ -30,6 +35,10 @@ function App() {
 
     if (currentPage === "reports") {
       return "Reports";
+    }
+
+    if (currentPage === "settings") {
+      return "Settings";
     }
 
     return "Dashboard";
@@ -56,6 +65,22 @@ function App() {
       return <Reports />;
     }
 
+    if (currentPage === "settings") {
+      return (
+        <Settings
+          initialSettings={savedSettings}
+          onSave={setSavedSettings}
+          onThemeChange={(nextTheme) => {
+            setTheme(nextTheme);
+            setSavedSettings((currentSettings) => ({
+              ...currentSettings,
+              theme: nextTheme,
+            }));
+          }}
+        />
+      );
+    }
+
     return <Dashboard />;
   };
 
@@ -66,21 +91,25 @@ function App() {
         ? "Track active book loans"
         : currentPage === "reports"
           ? "Analyze library activity, borrowing trends, and collection performance"
-          : undefined;
+          : currentPage === "settings"
+            ? "Manage your library preferences"
+            : undefined;
 
   return (
     <LibraryDataProvider
       initialBooks={initialBooks}
       initialStudents={initialStudents}
     >
-      <Layout
-        currentPage={currentPage}
-        onNavigate={setCurrentPage}
-        title={getPageTitle()}
-        subtitle={pageSubtitle}
-      >
-        {renderPage()}
-      </Layout>
+      <div className={`app-theme app-theme--${theme}`}>
+        <Layout
+          currentPage={currentPage}
+          onNavigate={setCurrentPage}
+          title={getPageTitle()}
+          subtitle={pageSubtitle}
+        >
+          {renderPage()}
+        </Layout>
+      </div>
     </LibraryDataProvider>
   );
 }

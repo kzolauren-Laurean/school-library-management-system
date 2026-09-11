@@ -8,6 +8,7 @@ function Header({
   searchPlaceholder = "Search...",
   notificationCount = 5,
   showAddBook = true,
+  showPageIcon = true,
   onAddBookClick,
 }) {
   const PageIcon = navigationIcons[currentPage] || navigationIcons.dashboard;
@@ -16,9 +17,9 @@ function Header({
     <header className="app-header">
       <div className="header-heading">
         <h1 className="header-title">
-          <span className="header-title-icon" aria-hidden="true">
+          {showPageIcon && <span className="header-title-icon" aria-hidden="true">
             <PageIcon />
-          </span>
+          </span>}
           {title}
         </h1>
         <p className="header-date">{subtitle || date}</p>

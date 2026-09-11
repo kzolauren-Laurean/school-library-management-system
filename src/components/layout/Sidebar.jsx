@@ -106,12 +106,16 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
           <span>Reports</span>
         </a>
 
-        <a href="#" className="nav-item">
+        <button
+          type="button"
+          className={`nav-item nav-button ${currentPage === "settings" ? "active" : ""}`}
+          onClick={() => onNavigate("settings")}
+        >
           <span>
             <GearIcon />
           </span>
           <span>Settings</span>
-        </a>
+        </button>
       </nav>
 
       <div className="sidebar-user">

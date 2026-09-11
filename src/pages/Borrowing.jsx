@@ -1,17 +1,64 @@
 import { useMemo, useState } from "react";
 import { BorrowIcon } from "../components/layout/NavigationIcons";
-import { getDateOnly, getLoanDetails, loanMatchesBook } from "../data/LibraryUtils";
+import {
+  getDateOnly,
+  getLoanDetails,
+  loanMatchesBook,
+} from "../data/LibraryUtils";
 import { useLibraryData } from "../data/useLibraryData";
 
 const PAGE_SIZE = 10;
-const formatDate = (value) => new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${value}T00:00:00`));
-const initials = (name) => name.split(" ").map((part) => part[0]).slice(0, 2).join("");
-const addDays = (value, count) => { const date = new Date(`${value}T00:00:00`); date.setDate(date.getDate() + count); return date.toISOString().slice(0, 10); };
-const ActiveLoanIcon = () => <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="m8 12 2.5 2.5L16 9" /></svg>;
-const Icon = ({ type }) => type === "active" ? <ActiveLoanIcon /> : type === "borrow" ? <BorrowIcon /> : <svg viewBox="0 0 24 24" aria-hidden="true">{type === "calendar" ? <><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" /></> : <><circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3.5 2" /></>}</svg>;
+const formatDate = (value) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(`${value}T00:00:00`));
+const initials = (name) =>
+  name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
+const addDays = (value, count) => {
+  const date = new Date(`${value}T00:00:00`);
+  date.setDate(date.getDate() + count);
+  return date.toISOString().slice(0, 10);
+};
+const ActiveLoanIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="m8 12 2.5 2.5L16 9" />
+  </svg>
+);
+const Icon = ({ type }) =>
+  type === "active" ? (
+    <ActiveLoanIcon />
+  ) : type === "borrow" ? (
+    <BorrowIcon />
+  ) : (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      {type === "calendar" ? (
+        <>
+          <rect x="4" y="5" width="16" height="15" rx="2" />
+          <path d="M8 3v4M16 3v4M4 10h16" />
+        </>
+      ) : (
+        <>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M12 7v5l3.5 2" />
+        </>
+      )}
+    </svg>
+  );
 
 function Borrowing() {
-  const { books: libraryBooks, students: libraryStudents, loans, createLoan } = useLibraryData();
+  const {
+    books: libraryBooks,
+    students: libraryStudents,
+    loans,
+    createLoan,
+  } = useLibraryData();
   const today = getDateOnly();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All Status");
@@ -25,29 +72,108 @@ function Borrowing() {
   const [borrowDate, setBorrowDate] = useState(today);
   const [dueDate, setDueDate] = useState(addDays(today, 14));
   const [error, setError] = useState("");
-  const details = useMemo(() => loans.map((loan) => getLoanDetails(loan, today)), [loans, today]);
-  const currentLoans = details.filter((loan) => loan.status === "Active" || loan.status === "Overdue");
+  const details = useMemo(
+    () => loans.map((loan) => getLoanDetails(loan, today)),
+    [loans, today],
+  );
+  const currentLoans = details.filter(
+    (loan) => loan.status === "Active" || loan.status === "Overdue",
+  );
   const active = currentLoans.filter((loan) => loan.status === "Active");
   const overdue = currentLoans.filter((loan) => loan.status === "Overdue");
   const dueWeek = active.filter((loan) => loan.days >= 0 && loan.days <= 7);
-  const bookLoans = (item) => currentLoans.filter((loan) => loanMatchesBook(loan, item)).length;
-  const studentLoans = (id) => currentLoans.filter((loan) => loan.studentId === id).length;
+  const bookLoans = (item) =>
+    currentLoans.filter((loan) => loanMatchesBook(loan, item)).length;
+  const studentLoans = (id) =>
+    currentLoans.filter((loan) => loan.studentId === id).length;
   const query = search.trim().toLowerCase();
-  const filtered = currentLoans.filter((loan) => (!query || [loan.studentName, loan.studentId, loan.bookTitle, loan.author, loan.loanId].some((value) => value.toLowerCase().includes(query))) && (status === "All Status" || loan.status === status));
+  const filtered = currentLoans.filter(
+    (loan) =>
+      (!query ||
+        [
+          loan.studentName,
+          loan.studentId,
+          loan.bookTitle,
+          loan.author,
+          loan.loanId,
+        ].some((value) => value.toLowerCase().includes(query))) &&
+      (status === "All Status" || loan.status === status),
+  );
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const displayPage = Math.min(page, pages);
-  const visible = filtered.slice((displayPage - 1) * PAGE_SIZE, displayPage * PAGE_SIZE);
+  const visible = filtered.slice(
+    (displayPage - 1) * PAGE_SIZE,
+    displayPage * PAGE_SIZE,
+  );
   const available = libraryBooks.filter((item) => {
     const hasCurrentLoan = bookLoans(item) > 0;
-    return (item.status === "Available" || (item.status === "Borrowed" && !hasCurrentLoan)) && !hasCurrentLoan;
+    return (
+      (item.status === "Available" ||
+        (item.status === "Borrowed" && !hasCurrentLoan)) &&
+      !hasCurrentLoan
+    );
   });
-  const students = useMemo(() => libraryStudents.filter((item) => item.status === "Active" && (!studentQuery || `${item.fullName} ${item.id}`.toLowerCase().includes(studentQuery.toLowerCase()))), [libraryStudents, studentQuery]);
-  const books = available.filter((item) => !bookQuery || `${item.title} ${item.author} ${item.category} ${item.id}`.toLowerCase().includes(bookQuery.toLowerCase()));
-  const openModal = () => { setStep(1); setStudent(null); setBook(null); setStudentQuery(""); setBookQuery(""); setBorrowDate(today); setDueDate(addDays(today, 14)); setError(""); setOpen(true); };
-  const confirm = (event) => { event.preventDefault(); if (!student || !book) return setError("Select a student and a book before confirming."); if (dueDate < borrowDate) return setError("Due date cannot be before the borrow date."); if (bookLoans(book)) { setError("That book is no longer available."); setStep(2); return; } const result = createLoan({ student, book, borrowDate, dueDate }); if (!result.success) { setError(result.message); setStep(2); return; } setOpen(false); setStep(1); setStudent(null); setBook(null); setStudentQuery(""); setBookQuery(""); setBorrowDate(today); setDueDate(addDays(today, 14)); setError(""); };
-  return <>
-    <style>{`.borrowing-page{min-height:calc(100vh - 92px);padding:24px;background:#f4f7fb;color:#1f3448}.borrowing-panel{background:#fff;border:1px solid #e3eaf2;border-radius:16px;box-shadow:0 3px 12px rgba(31,52,72,.04);overflow:hidden}.borrowing-heading{display:flex;justify-content:space-between;gap:16px;padding:24px;border-bottom:1px solid #edf1f5}.borrowing-heading h2{margin:0;color:#20364a;font-size:20px}.borrowing-heading p{margin:6px 0 0;color:#8a9bad;font-size:13px}.borrowing-add-button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:8px;background:#334e68;color:#fff;font:inherit;font-weight:700;cursor:pointer}.borrowing-add-button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.borrowing-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px 24px 0}.borrowing-summary-card{display:flex;align-items:center;gap:16px;padding:17px 19px;border:1px solid #e5edf5;border-radius:12px;background:#f8fbff}.borrowing-summary-card--overdue{border-color:#f3d9d9;background:#fffafa}.borrowing-summary-card--due{border-color:#f2e3c7;background:#fffdf8}.borrowing-summary-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:50%}.borrowing-summary-icon svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.borrowing-summary-icon--active{background:rgba(55,148,95,.14);color:#188a58}.borrowing-summary-icon--overdue{background:rgba(238,91,104,.16);color:#c92d3d}.borrowing-summary-icon--due{background:rgba(235,177,64,.2);color:#b2760d}.borrowing-summary-label{margin:0;color:#65809a;font-size:11px;font-weight:700;text-transform:uppercase}.borrowing-summary-value{margin:5px 0 0;font-size:28px;font-weight:700}.borrowing-controls{display:flex;justify-content:space-between;gap:16px;padding:20px 24px 0;flex-wrap:wrap}.borrowing-search{display:flex;align-items:center;gap:10px;flex:1;max-width:460px;padding:10px 14px;border:1px solid #dfe7ef;border-radius:10px;background:#f8fafc}.borrowing-search input,.borrowing-filter select,.borrowing-modal-search{box-sizing:border-box;padding:10px 12px;border:1px solid #dfe7ef;border-radius:8px;background:#f8fafc;color:#102334;font:inherit}.borrowing-search input{width:100%;border:0;outline:0;background:transparent}.borrowing-filter{display:flex;flex-direction:column;gap:8px;min-width:180px;color:#52677d;font-size:12px;font-weight:600}.borrowing-table-wrap{padding:20px 24px 0;overflow-x:auto}.borrowing-table{width:100%;min-width:920px;border-collapse:collapse;text-align:left}.borrowing-table th{padding:12px 10px;border-top:1px solid #edf1f5;border-bottom:1px solid #e7edf3;color:#8495a6;font-size:10px;text-transform:uppercase}.borrowing-table td{padding:13px 10px;border-bottom:1px solid #edf1f5;color:#40566b;font-size:12px}.borrowing-student{display:flex;align-items:center;gap:8px}.borrowing-avatar,.borrowing-option-avatar{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#dfeaf5;color:#2d536f;font-size:10px;font-weight:700}.borrowing-cell-main strong,.borrowing-cell-main span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.borrowing-cell-main span{margin-top:3px;color:#8b9db1;font-size:11px}.borrowing-days--future{color:#2d8a5f;font-weight:700}.borrowing-days--soon{color:#b97a1f;font-weight:700}.borrowing-days--overdue{color:#b43348;font-weight:700}.borrowing-status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:700}.borrowing-status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.borrowing-status--active{background:#eaf8ee;color:#2d8a5f}.borrowing-status--overdue{background:#fff1f3;color:#b43348}.borrowing-return-button,.borrowing-modal-secondary{padding:7px 11px;border:0;border-radius:7px;background:#eaf2ff;color:#2d6fc5;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.borrowing-empty{text-align:center;padding:48px 20px}.borrowing-empty p{margin:8px 0 16px;color:#71869a}.borrowing-footer{display:flex;justify-content:space-between;padding:18px 24px 24px;color:#607389;font-size:12px}.borrowing-pagination{display:flex;gap:8px}.borrowing-page-button{min-width:34px;height:34px;border:1px solid #dfeaf5;border-radius:8px;background:#eef4fb;color:#2d536f;cursor:pointer}.borrowing-page-button--active{background:#334e68;color:#fff}.borrowing-page-button:disabled{opacity:.5}.borrowing-modal-backdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.45)}.borrowing-modal{width:min(100%,620px);max-height:calc(100vh - 40px);overflow:auto;border-radius:16px;background:#fff}.borrowing-modal-header,.borrowing-modal-actions{display:flex;justify-content:space-between;gap:12px;padding:20px 22px;border-bottom:1px solid #edf1f5}.borrowing-modal-header h3{margin:0}.borrowing-close{border:0;background:#f3f7fb;font-size:20px;cursor:pointer}.borrowing-steps{display:flex;gap:8px;padding:16px 22px 0}.borrowing-step{flex:1;padding:8px;border-bottom:2px solid #dfe7ef;text-align:center;color:#8193a6;font-size:11px;font-weight:700}.borrowing-step--current{border-color:#334e68;color:#334e68}.borrowing-modal-content{padding:18px 22px}.borrowing-modal-search{width:100%}.borrowing-options{display:grid;gap:8px;max-height:260px;margin-top:12px;overflow:auto}.borrowing-option{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e3eaf2;border-radius:9px;background:#fff;text-align:left;cursor:pointer}.borrowing-option--selected,.borrowing-option:hover{border-color:#8bb5e2;background:#f5f9ff}.borrowing-option-copy{flex:1}.borrowing-option-copy strong,.borrowing-option-copy span{display:block}.borrowing-option-copy span{color:#8193a6;font-size:11px}.borrowing-summary-box{display:grid;gap:10px;padding:14px;background:#f8fafc}.borrowing-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.borrowing-date-grid label{display:grid;gap:6px;font-size:12px;font-weight:700}.borrowing-date-grid input{padding:9px;border:1px solid #dfe7ef;border-radius:8px}.borrowing-form-error{color:#b43348;font-size:12px}@media(max-width:680px){.borrowing-page{padding:16px}.borrowing-heading{align-items:flex-start;flex-direction:column}.borrowing-summary{grid-template-columns:1fr}.borrowing-footer{flex-direction:column;gap:12px}.borrowing-date-grid{grid-template-columns:1fr}}`}</style>
-    <style>{`
+  const students = useMemo(
+    () =>
+      libraryStudents.filter(
+        (item) =>
+          item.status === "Active" &&
+          (!studentQuery ||
+            `${item.fullName} ${item.id}`
+              .toLowerCase()
+              .includes(studentQuery.toLowerCase())),
+      ),
+    [libraryStudents, studentQuery],
+  );
+  const books = available.filter(
+    (item) =>
+      !bookQuery ||
+      `${item.title} ${item.author} ${item.category} ${item.id}`
+        .toLowerCase()
+        .includes(bookQuery.toLowerCase()),
+  );
+  const openModal = () => {
+    setStep(1);
+    setStudent(null);
+    setBook(null);
+    setStudentQuery("");
+    setBookQuery("");
+    setBorrowDate(today);
+    setDueDate(addDays(today, 14));
+    setError("");
+    setOpen(true);
+  };
+  const confirm = (event) => {
+    event.preventDefault();
+    if (!student || !book)
+      return setError("Select a student and a book before confirming.");
+    if (dueDate < borrowDate)
+      return setError("Due date cannot be before the borrow date.");
+    if (bookLoans(book)) {
+      setError("That book is no longer available.");
+      setStep(2);
+      return;
+    }
+    const result = createLoan({ student, book, borrowDate, dueDate });
+    if (!result.success) {
+      setError(result.message);
+      setStep(2);
+      return;
+    }
+    setOpen(false);
+    setStep(1);
+    setStudent(null);
+    setBook(null);
+    setStudentQuery("");
+    setBookQuery("");
+    setBorrowDate(today);
+    setDueDate(addDays(today, 14));
+    setError("");
+  };
+  return (
+    <>
+      <style>{`.borrowing-page{min-height:calc(100vh - 92px);padding:24px;background:#f4f7fb;color:#1f3448}.borrowing-panel{background:#fff;border:1px solid #e3eaf2;border-radius:16px;box-shadow:0 3px 12px rgba(31,52,72,.04);overflow:hidden}.borrowing-heading{display:flex;justify-content:space-between;gap:16px;padding:24px;border-bottom:1px solid #edf1f5}.borrowing-heading h2{margin:0;color:#20364a;font-size:20px}.borrowing-heading p{margin:6px 0 0;color:#8a9bad;font-size:13px}.borrowing-add-button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:8px;background:#334e68;color:#fff;font:inherit;font-weight:700;cursor:pointer}.borrowing-add-button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.borrowing-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px 24px 0}.borrowing-summary-card{display:flex;align-items:center;gap:16px;padding:17px 19px;border:1px solid #e5edf5;border-radius:12px;background:#f8fbff}.borrowing-summary-card--overdue{border-color:#f3d9d9;background:#fffafa}.borrowing-summary-card--due{border-color:#f2e3c7;background:#fffdf8}.borrowing-summary-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:50%}.borrowing-summary-icon svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.borrowing-summary-icon--active{background:rgba(55,148,95,.14);color:#188a58}.borrowing-summary-icon--overdue{background:rgba(238,91,104,.16);color:#c92d3d}.borrowing-summary-icon--due{background:rgba(235,177,64,.2);color:#b2760d}.borrowing-summary-label{margin:0;color:#65809a;font-size:11px;font-weight:700;text-transform:uppercase}.borrowing-summary-value{margin:5px 0 0;font-size:28px;font-weight:700}.borrowing-controls{display:flex;justify-content:space-between;gap:16px;padding:20px 24px 0;flex-wrap:wrap}.borrowing-search{display:flex;align-items:center;gap:10px;flex:1;max-width:460px;padding:10px 14px;border:1px solid #dfe7ef;border-radius:10px;background:#f8fafc}.borrowing-search input,.borrowing-filter select,.borrowing-modal-search{box-sizing:border-box;padding:10px 12px;border:1px solid #dfe7ef;border-radius:8px;background:#f8fafc;color:#102334;font:inherit}.borrowing-search input{width:100%;border:0;outline:0;background:transparent}.borrowing-filter{display:flex;flex-direction:column;gap:8px;min-width:180px;color:#52677d;font-size:12px;font-weight:600}.borrowing-table-wrap{padding:20px 24px 0;overflow-x:auto}.borrowing-table{width:100%;min-width:920px;border-collapse:collapse;text-align:left}.borrowing-table th{padding:12px 10px;border-top:1px solid #edf1f5;border-bottom:1px solid #e7edf3;color:#8495a6;font-size:10px;text-transform:uppercase}.borrowing-table td{padding:13px 10px;border-bottom:1px solid #edf1f5;color:#40566b;font-size:12px}.borrowing-student{display:flex;align-items:center;gap:8px}.borrowing-avatar,.borrowing-option-avatar{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#dfeaf5;color:#2d536f;font-size:10px;font-weight:700}.borrowing-cell-main strong,.borrowing-cell-main span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.borrowing-cell-main span{margin-top:3px;color:#8b9db1;font-size:11px}.borrowing-days--future{color:#2d8a5f;font-weight:700}.borrowing-days--soon{color:#b97a1f;font-weight:700}.borrowing-days--overdue{color:#b43348;font-weight:700}.borrowing-status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:700}.borrowing-status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.borrowing-status--active{background:#eaf8ee;color:#2d8a5f}.borrowing-status--overdue{background:#fff1f3;color:#b43348}.borrowing-return-button,.borrowing-modal-secondary{padding:7px 11px;border:0;border-radius:7px;background:#eaf2ff;color:#2d6fc5;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.borrowing-empty{text-align:center;padding:48px 20px}.borrowing-empty p{margin:8px 0 16px;color:#71869a}.borrowing-footer{display:flex;justify-content:space-between;padding:18px 24px 24px;color:#607389;font-size:12px}.borrowing-pagination{display:flex;gap:8px}.borrowing-page-button{min-width:34px;height:34px;border:1px solid #dfeaf5;border-radius:8px;background:#eef4fb;color:#2d536f;cursor:pointer}.borrowing-page-button--active{background:#334e68;color:#fff}.borrowing-page-button:disabled{opacity:.5}.borrowing-modal-backdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.45)}.borrowing-modal{width:min(100%,620px);max-height:calc(100vh - 40px);overflow:auto;border-radius:16px;background:#fff}.borrowing-modal-header,.borrowing-modal-actions{display:flex;justify-content:space-between;gap:12px;padding:20px 22px;border-bottom:1px solid #edf1f5}.borrowing-modal-header h3{margin:0}.borrowing-close{border:0;background:#f3f7fb;font-size:20px;cursor:pointer}.borrowing-steps{display:flex;gap:8px;padding:16px 22px 0}.borrowing-step{flex:1;padding:8px;border-bottom:2px solid #dfe7ef;text-align:center;color:#8193a6;font-size:11px;font-weight:700}.borrowing-step--current{border-color:#334e68;color:#334e68}.borrowing-modal-content{padding:18px 22px}.borrowing-modal-search{width:100%}.borrowing-options{display:grid;gap:8px;max-height:260px;margin-top:12px;overflow:auto}.borrowing-option{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e3eaf2;border-radius:9px;background:#fff;text-align:left;cursor:pointer}.borrowing-option--selected,.borrowing-option:hover{border-color:#8bb5e2;background:#f5f9ff}.borrowing-option-copy{flex:1}.borrowing-option-copy strong,.borrowing-option-copy span{display:block}.borrowing-option-copy span{color:#8193a6;font-size:11px}.borrowing-summary-box{display:grid;gap:10px;padding:14px;background:#f8fafc}.borrowing-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.borrowing-date-grid label{display:grid;gap:6px;font-size:12px;font-weight:700}.borrowing-date-grid input{padding:9px;border:1px solid #dfe7ef;border-radius:8px}.borrowing-form-error{color:#b43348;font-size:12px}@media(max-width:680px){.borrowing-page{padding:16px}.borrowing-heading{align-items:flex-start;flex-direction:column}.borrowing-summary{grid-template-columns:1fr}.borrowing-footer{flex-direction:column;gap:12px}.borrowing-date-grid{grid-template-columns:1fr}}`}</style>
+      <style>{`
       .borrowing-page { min-height: calc(100vh - 92px); padding: 24px; background: #f4f7fb; color: #1f3448; box-sizing: border-box; }
       .borrowing-panel { background: #fff; border: 1px solid #e3eaf2; border-radius: 16px; box-shadow: 0 3px 12px rgba(31,52,72,.04); overflow: hidden; }
       .borrowing-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 24px 18px; border-bottom: 1px solid #edf1f5; }
@@ -71,8 +197,8 @@ function Borrowing() {
       .borrowing-summary-card--overdue .borrowing-summary-value { color: #b43348; } .borrowing-summary-card--due .borrowing-summary-value { color: #b97a1f; }
       .borrowing-controls { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 20px 24px 0; flex-wrap: wrap; }
       .borrowing-search { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 460px; min-width: 230px; padding: 10px 14px; border: 1px solid #dfe7ef; border-radius: 10px; background: #f8fafc; }
-      .borrowing-search:focus-within { border-color: rgba(74,144,226,.42); box-shadow: 0 0 0 3px rgba(74,144,226,.1); }
-      .borrowing-search input { width: 100%; min-height: 18px; padding: 0; border: 0; outline: 0; background: transparent; color: #102334; font: inherit; font-size: 14px; }
+      .borrowing-search:focus-within { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,.16); }
+      .borrowing-search input { width: 100%; min-height: 18px; padding: 0; border: 0; outline: none; background: transparent; color: #102334; font: inherit; font-size: 14px; }
       .borrowing-filter { display: flex; flex-direction: column; gap: 8px; min-width: 180px; color: #52677d; font-size: 12px; font-weight: 600; }
       .borrowing-filter select { padding: 10px 12px; border: 1px solid #dfe7ef; border-radius: 8px; background: #f8fafc; color: #102334; font: inherit; }
       .borrowing-table-wrap { width: 100%; padding: 20px 24px 0; box-sizing: border-box; overflow: hidden; }
@@ -96,21 +222,387 @@ function Borrowing() {
       .borrowing-modal-actions .borrowing-add-button:disabled { cursor: not-allowed; opacity: .5; transform: none; }
       .borrowing-modal-content { padding: 20px 22px 18px; }
       .borrowing-summary-box { border-color: #b9d5f2; background: #f1f7ff; color: #35506d; }
+      .borrowing-modal-search:focus, .borrowing-date-grid input:focus { outline: none; border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,.16); background: #fff; }
       @media (max-width: 900px) { .borrowing-table th:nth-child(4), .borrowing-table td:nth-child(4), .borrowing-table th:nth-child(6), .borrowing-table td:nth-child(6) { display: none; } .borrowing-table th:nth-child(5) { width: 13%; } }
       @media (max-width: 680px) { .borrowing-page { padding: 16px; } .borrowing-heading { align-items: flex-start; flex-direction: column; } .borrowing-add-button { width: 100%; justify-content: center; } .borrowing-summary { grid-template-columns: 1fr; } .borrowing-controls { align-items: stretch; } .borrowing-search { max-width: none; } .borrowing-filter { min-width: 0; } .borrowing-table th, .borrowing-table td { padding-left: 6px; padding-right: 6px; } .borrowing-table th:nth-child(5), .borrowing-table td:nth-child(5), .borrowing-table th:nth-child(7), .borrowing-table td:nth-child(7) { display: none; } .borrowing-table th:nth-child(2) { width: 25%; } .borrowing-table th:nth-child(3) { width: 29%; } .borrowing-table th:nth-child(8) { width: 18%; } .borrowing-footer { align-items: flex-start; flex-direction: column; } .borrowing-modal { width: min(100%, 480px); } .borrowing-date-grid { grid-template-columns: 1fr; } }
     `}</style>
-    <div className="borrowing-page"><div className="borrowing-panel"><div className="borrowing-heading"><div><h2>Active Book Loans</h2><p>Track active book loans.</p></div><button type="button" className="borrowing-add-button" onClick={openModal}><BorrowIcon />Borrow Book</button></div>
-      <section className="borrowing-summary"><div className="borrowing-summary-card borrowing-summary-card--active"><span className="borrowing-summary-icon borrowing-summary-icon--active"><Icon type="active" /></span><div><p className="borrowing-summary-label">Active Loans</p><p className="borrowing-summary-value">{active.length}</p></div></div><div className="borrowing-summary-card borrowing-summary-card--overdue"><span className="borrowing-summary-icon borrowing-summary-icon--overdue"><Icon type="clock" /></span><div><p className="borrowing-summary-label">Overdue</p><p className="borrowing-summary-value">{overdue.length}</p></div></div><div className="borrowing-summary-card borrowing-summary-card--due"><span className="borrowing-summary-icon borrowing-summary-icon--due"><Icon type="calendar" /></span><div><p className="borrowing-summary-label">Due This Week</p><p className="borrowing-summary-value">{dueWeek.length}</p></div></div></section>
-      <div className="borrowing-controls"><label className="borrowing-search">⌕<input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Search by student or book..." /></label><label className="borrowing-filter">Status<select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option>All Status</option><option>Active</option><option>Overdue</option></select></label></div>
-      <div className="borrowing-table-wrap"><table className="borrowing-table"><thead><tr><th>Loan ID</th><th>Student</th><th>Book</th><th>Borrow Date</th><th>Due Date</th><th>Days Left</th><th>Status</th></tr></thead><tbody>{visible.length ? visible.map((loan) => { const days = loan.status === "Overdue" ? `${loan.overdueDays} days overdue` : loan.days === 0 ? "Due today" : `${loan.days} days`; return <tr key={loan.loanId}><td>{loan.loanId}</td><td><div className="borrowing-student"><span className="borrowing-avatar">{initials(loan.studentName)}</span><div className="borrowing-cell-main"><strong>{loan.studentName}</strong><span>{loan.studentId}</span></div></div></td><td><div className="borrowing-cell-main"><strong>{loan.bookTitle}</strong><span>{loan.author}</span></div></td><td>{formatDate(loan.borrowDate)}</td><td>{formatDate(loan.dueDate)}</td><td className={`borrowing-days--${loan.status === "Overdue" ? "overdue" : loan.days <= 3 ? "soon" : "future"}`}>{days}</td><td><span className={`borrowing-status borrowing-status--${loan.status.toLowerCase()}`}>{loan.status}</span></td></tr>; }) : <tr><td colSpan="7"><div className="borrowing-empty"><h3>No active loans</h3><p>There are no active loans matching your filters.</p><button type="button" className="borrowing-add-button" onClick={openModal}>Borrow a Book</button></div></td></tr>}</tbody></table></div>
-      <footer className="borrowing-footer"><span>Showing {filtered.length ? (displayPage - 1) * PAGE_SIZE + 1 : 0}-{Math.min(displayPage * PAGE_SIZE, filtered.length)} of {filtered.length} loans</span><div className="borrowing-pagination"><button type="button" className="borrowing-page-button" disabled={displayPage === 1} onClick={() => setPage((value) => value - 1)}>Prev</button>{Array.from({ length: pages }, (_, index) => index + 1).map((value) => <button type="button" key={value} className={`borrowing-page-button ${displayPage === value ? "borrowing-page-button--active" : ""}`} onClick={() => setPage(value)}>{value}</button>)}<button type="button" className="borrowing-page-button" disabled={displayPage === pages} onClick={() => setPage((value) => value + 1)}>Next</button></div></footer></div></div>
-    {open && <div className="borrowing-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}><div className="borrowing-modal" role="dialog" aria-modal="true" aria-labelledby="borrowing-modal-title"><div className="borrowing-modal-header"><div><small>NEW TRANSACTION</small><h3 id="borrowing-modal-title">Borrow a book</h3></div><button type="button" className="borrowing-close" onClick={() => setOpen(false)} aria-label="Close borrowing dialog">×</button></div><div className="borrowing-steps"><span className={`borrowing-step ${step === 1 ? "borrowing-step--current" : step > 1 ? "borrowing-step--complete" : ""}`}>1. Student</span><span className={`borrowing-step ${step === 2 ? "borrowing-step--current" : step > 2 ? "borrowing-step--complete" : ""}`}>2. Book</span><span className={`borrowing-step ${step === 3 ? "borrowing-step--current" : ""}`}>3. Confirm</span></div><div className="borrowing-modal-content">
-      {step === 1 && <><h4>Select Student</h4><input className="borrowing-modal-search" value={studentQuery} onChange={(event) => setStudentQuery(event.target.value)} placeholder="Search by student name or ID" aria-label="Search students" /><div className="borrowing-options">{students.map((item) => <button type="button" className="borrowing-option" key={item.id} aria-pressed={student?.id === item.id} onClick={() => setStudent(item)}><span className="borrowing-option-avatar">{initials(item.fullName)}</span><span className="borrowing-option-copy"><strong>{item.fullName}</strong><span>{item.id} · {item.grade}</span></span><span>{studentLoans(item.id)} out</span></button>)}</div></>}
-      {step === 2 && <><h4>Select Book</h4><input className="borrowing-modal-search" value={bookQuery} onChange={(event) => setBookQuery(event.target.value)} placeholder="Search by title, author, category, or ID" aria-label="Search available books" /><div className="borrowing-options">{books.map((item) => <button type="button" className="borrowing-option" key={item.id} aria-pressed={book?.id === item.id} onClick={() => setBook(item)}><span className="borrowing-option-copy"><strong>{item.title}</strong><span>{item.author} · {item.category} · {item.id}</span></span><span>Available</span></button>)}</div></>}
-      {step === 3 && <><h4>Confirm Borrow</h4><div className="borrowing-summary-box"><div>Student: <strong>{student?.fullName}</strong> ({student?.id})</div><div>Book: <strong>{book?.title}</strong> by {book?.author} ({book?.id})</div></div><div className="borrowing-date-grid"><label>Borrow Date<input type="date" value={borrowDate} onChange={(event) => setBorrowDate(event.target.value)} /></label><label>Due Date<input type="date" min={borrowDate} value={dueDate} onChange={(event) => setDueDate(event.target.value)} /></label></div></>}
-      {error && <p className="borrowing-form-error" role="alert">{error}</p>}
-    </div><div className="borrowing-modal-actions"><button type="button" className="borrowing-modal-secondary" onClick={() => step === 1 ? setOpen(false) : setStep((value) => value - 1)}>{step === 1 ? "Cancel" : "Back"}</button>{step < 3 ? <button type="button" className="borrowing-add-button" disabled={step === 1 ? !student : !book} onClick={() => { setError(""); setStep((value) => value + 1); }}>Continue</button> : <button type="button" className="borrowing-add-button" onClick={confirm}>Confirm Borrow</button>}</div></div></div>}
-  </>;
+      <div className="borrowing-page">
+        <div className="borrowing-panel">
+          <div className="borrowing-heading">
+            <div>
+              <h2>Active Book Loans</h2>
+              <p>Track active book loans.</p>
+            </div>
+            <button
+              type="button"
+              className="borrowing-add-button"
+              onClick={openModal}
+            >
+              <BorrowIcon />
+              Borrow Book
+            </button>
+          </div>
+          <section className="borrowing-summary">
+            <div className="borrowing-summary-card borrowing-summary-card--active">
+              <span className="borrowing-summary-icon borrowing-summary-icon--active">
+                <Icon type="active" />
+              </span>
+              <div>
+                <p className="borrowing-summary-label">Active Loans</p>
+                <p className="borrowing-summary-value">{active.length}</p>
+              </div>
+            </div>
+            <div className="borrowing-summary-card borrowing-summary-card--overdue">
+              <span className="borrowing-summary-icon borrowing-summary-icon--overdue">
+                <Icon type="clock" />
+              </span>
+              <div>
+                <p className="borrowing-summary-label">Overdue</p>
+                <p className="borrowing-summary-value">{overdue.length}</p>
+              </div>
+            </div>
+            <div className="borrowing-summary-card borrowing-summary-card--due">
+              <span className="borrowing-summary-icon borrowing-summary-icon--due">
+                <Icon type="calendar" />
+              </span>
+              <div>
+                <p className="borrowing-summary-label">Due This Week</p>
+                <p className="borrowing-summary-value">{dueWeek.length}</p>
+              </div>
+            </div>
+          </section>
+          <div className="borrowing-controls">
+            <label className="borrowing-search">
+              ⌕
+              <input
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search by student or book..."
+              />
+            </label>
+            <label className="borrowing-filter">
+              Status
+              <select
+                value={status}
+                onChange={(event) => {
+                  setStatus(event.target.value);
+                  setPage(1);
+                }}
+              >
+                <option>All Status</option>
+                <option>Active</option>
+                <option>Overdue</option>
+              </select>
+            </label>
+          </div>
+          <div className="borrowing-table-wrap">
+            <table className="borrowing-table">
+              <thead>
+                <tr>
+                  <th>Loan ID</th>
+                  <th>Student</th>
+                  <th>Book</th>
+                  <th>Borrow Date</th>
+                  <th>Due Date</th>
+                  <th>Days Left</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visible.length ? (
+                  visible.map((loan) => {
+                    const days =
+                      loan.status === "Overdue"
+                        ? `${loan.overdueDays} days overdue`
+                        : loan.days === 0
+                          ? "Due today"
+                          : `${loan.days} days`;
+                    return (
+                      <tr key={loan.loanId}>
+                        <td>{loan.loanId}</td>
+                        <td>
+                          <div className="borrowing-student">
+                            <span className="borrowing-avatar">
+                              {initials(loan.studentName)}
+                            </span>
+                            <div className="borrowing-cell-main">
+                              <strong>{loan.studentName}</strong>
+                              <span>{loan.studentId}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="borrowing-cell-main">
+                            <strong>{loan.bookTitle}</strong>
+                            <span>{loan.author}</span>
+                          </div>
+                        </td>
+                        <td>{formatDate(loan.borrowDate)}</td>
+                        <td>{formatDate(loan.dueDate)}</td>
+                        <td
+                          className={`borrowing-days--${loan.status === "Overdue" ? "overdue" : loan.days <= 3 ? "soon" : "future"}`}
+                        >
+                          {days}
+                        </td>
+                        <td>
+                          <span
+                            className={`borrowing-status borrowing-status--${loan.status.toLowerCase()}`}
+                          >
+                            {loan.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="7">
+                      <div className="borrowing-empty">
+                        <h3>No active loans</h3>
+                        <p>There are no active loans matching your filters.</p>
+                        <button
+                          type="button"
+                          className="borrowing-add-button"
+                          onClick={openModal}
+                        >
+                          Borrow a Book
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <footer className="borrowing-footer">
+            <span>
+              Showing {filtered.length ? (displayPage - 1) * PAGE_SIZE + 1 : 0}-
+              {Math.min(displayPage * PAGE_SIZE, filtered.length)} of{" "}
+              {filtered.length} loans
+            </span>
+            <div className="borrowing-pagination">
+              <button
+                type="button"
+                className="borrowing-page-button"
+                disabled={displayPage === 1}
+                onClick={() => setPage((value) => value - 1)}
+              >
+                Prev
+              </button>
+              {Array.from({ length: pages }, (_, index) => index + 1).map(
+                (value) => (
+                  <button
+                    type="button"
+                    key={value}
+                    className={`borrowing-page-button ${displayPage === value ? "borrowing-page-button--active" : ""}`}
+                    onClick={() => setPage(value)}
+                  >
+                    {value}
+                  </button>
+                ),
+              )}
+              <button
+                type="button"
+                className="borrowing-page-button"
+                disabled={displayPage === pages}
+                onClick={() => setPage((value) => value + 1)}
+              >
+                Next
+              </button>
+            </div>
+          </footer>
+        </div>
+      </div>
+      {open && (
+        <div
+          className="borrowing-modal-backdrop"
+          onMouseDown={(event) =>
+            event.target === event.currentTarget && setOpen(false)
+          }
+        >
+          <div
+            className="borrowing-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="borrowing-modal-title"
+          >
+            <div className="borrowing-modal-header">
+              <div>
+                <small>NEW TRANSACTION</small>
+                <h3 id="borrowing-modal-title">Borrow a book</h3>
+              </div>
+              <button
+                type="button"
+                className="borrowing-close"
+                onClick={() => setOpen(false)}
+                aria-label="Close borrowing dialog"
+              >
+                ×
+              </button>
+            </div>
+            <div className="borrowing-steps">
+              <span
+                className={`borrowing-step ${step === 1 ? "borrowing-step--current" : step > 1 ? "borrowing-step--complete" : ""}`}
+              >
+                1. Student
+              </span>
+              <span
+                className={`borrowing-step ${step === 2 ? "borrowing-step--current" : step > 2 ? "borrowing-step--complete" : ""}`}
+              >
+                2. Book
+              </span>
+              <span
+                className={`borrowing-step ${step === 3 ? "borrowing-step--current" : ""}`}
+              >
+                3. Confirm
+              </span>
+            </div>
+            <div className="borrowing-modal-content">
+              {step === 1 && (
+                <>
+                  <h4>Select Student</h4>
+                  <input
+                    className="borrowing-modal-search"
+                    value={studentQuery}
+                    onChange={(event) => setStudentQuery(event.target.value)}
+                    placeholder="Search by student name or ID"
+                    aria-label="Search students"
+                  />
+                  <div className="borrowing-options">
+                    {students.map((item) => (
+                      <button
+                        type="button"
+                        className="borrowing-option"
+                        key={item.id}
+                        aria-pressed={student?.id === item.id}
+                        onClick={() => setStudent(item)}
+                      >
+                        <span className="borrowing-option-avatar">
+                          {initials(item.fullName)}
+                        </span>
+                        <span className="borrowing-option-copy">
+                          <strong>{item.fullName}</strong>
+                          <span>
+                            {item.id} · {item.grade}
+                          </span>
+                        </span>
+                        <span>{studentLoans(item.id)} out</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  <h4>Select Book</h4>
+                  <input
+                    className="borrowing-modal-search"
+                    value={bookQuery}
+                    onChange={(event) => setBookQuery(event.target.value)}
+                    placeholder="Search by title, author, category, or ID"
+                    aria-label="Search available books"
+                  />
+                  <div className="borrowing-options">
+                    {books.map((item) => (
+                      <button
+                        type="button"
+                        className="borrowing-option"
+                        key={item.id}
+                        aria-pressed={book?.id === item.id}
+                        onClick={() => setBook(item)}
+                      >
+                        <span className="borrowing-option-copy">
+                          <strong>{item.title}</strong>
+                          <span>
+                            {item.author} · {item.category} · {item.id}
+                          </span>
+                        </span>
+                        <span>Available</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              {step === 3 && (
+                <>
+                  <h4>Confirm Borrow</h4>
+                  <div className="borrowing-summary-box">
+                    <div>
+                      Student: <strong>{student?.fullName}</strong> (
+                      {student?.id})
+                    </div>
+                    <div>
+                      Book: <strong>{book?.title}</strong> by {book?.author} (
+                      {book?.id})
+                    </div>
+                  </div>
+                  <div className="borrowing-date-grid">
+                    <label>
+                      Borrow Date
+                      <input
+                        type="date"
+                        value={borrowDate}
+                        onChange={(event) => setBorrowDate(event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Due Date
+                      <input
+                        type="date"
+                        min={borrowDate}
+                        value={dueDate}
+                        onChange={(event) => setDueDate(event.target.value)}
+                      />
+                    </label>
+                  </div>
+                </>
+              )}
+              {error && (
+                <p className="borrowing-form-error" role="alert">
+                  {error}
+                </p>
+              )}
+            </div>
+            <div className="borrowing-modal-actions">
+              <button
+                type="button"
+                className="borrowing-modal-secondary"
+                onClick={() =>
+                  step === 1 ? setOpen(false) : setStep((value) => value - 1)
+                }
+              >
+                {step === 1 ? "Cancel" : "Back"}
+              </button>
+              {step < 3 ? (
+                <button
+                  type="button"
+                  className="borrowing-add-button"
+                  disabled={step === 1 ? !student : !book}
+                  onClick={() => {
+                    setError("");
+                    setStep((value) => value + 1);
+                  }}
+                >
+                  Continue
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="borrowing-add-button"
+                  onClick={confirm}
+                >
+                  Confirm Borrow
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default Borrowing;
