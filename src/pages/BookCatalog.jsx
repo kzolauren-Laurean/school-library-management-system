@@ -603,7 +603,7 @@ function BookCatalog() {
         }
 
         .catalog-filters {
-          padding: 20px 24px 0;
+          padding: 20px 24px;
         }
 
         .catalog-search-grid {
@@ -867,6 +867,9 @@ function BookCatalog() {
 
         .catalog-modal {
           width: min(100%, 620px);
+          max-height: min(720px, calc(100svh - 48px));
+          display: flex;
+          flex-direction: column;
           background: #ffffff;
           border: 1px solid #dfe7ef;
           border-radius: 16px;
@@ -881,6 +884,7 @@ function BookCatalog() {
           gap: 12px;
           padding: 20px 22px 16px;
           border-bottom: 1px solid #edf1f5;
+          flex: 0 0 auto;
         }
 
         .catalog-modal-header h3 {
@@ -901,6 +905,8 @@ function BookCatalog() {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 16px;
           padding: 20px 22px;
+          min-height: 0;
+          overflow-y: auto;
         }
 
         .modal-form .full-width {
@@ -926,6 +932,7 @@ function BookCatalog() {
           justify-content: flex-end;
           gap: 12px;
           padding: 0 22px 22px;
+          flex: 0 0 auto;
         }
 
         .modal-action-btn {

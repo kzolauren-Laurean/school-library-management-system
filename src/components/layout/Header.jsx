@@ -143,7 +143,9 @@ function Header({
         <button
           type="button"
           className="header-menu-btn"
-          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={
+            menuOpen ? "Close navigation menu" : "Open navigation menu"
+          }
           aria-expanded={menuOpen}
           onClick={onMenuToggle}
         >

@@ -30,12 +30,13 @@ function Sidebar({
   };
   const profileName = userProfile?.name?.trim() || "Guest User";
   const profileRole = userProfile?.role?.trim() || "Not signed in";
-  const profileInitials = userProfile?.name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("") || "";
+  const profileInitials =
+    userProfile?.name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0].toUpperCase())
+      .join("") || "";
   return (
     <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sidebar-brand">
