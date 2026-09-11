@@ -6,6 +6,7 @@ import Students, { initialStudents } from "./pages/Students";
 import Returns from "./pages/Returns";
 import { LibraryDataProvider } from "./data/LibraryDataContext";
 import Borrowing from "./pages/Borrowing";
+import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import { defaultSettings } from "./pages/settingsDefaults";
 import "./theme.css";
@@ -32,6 +33,10 @@ function App() {
       return "Borrowing";
     }
 
+    if (currentPage === "reports") {
+      return "Reports";
+    }
+
     if (currentPage === "settings") {
       return "Settings";
     }
@@ -56,35 +61,54 @@ function App() {
       return <Borrowing onNavigate={setCurrentPage} />;
     }
 
+    if (currentPage === "reports") {
+      return <Reports />;
+    }
+
     if (currentPage === "settings") {
-      return <Settings initialSettings={savedSettings} onSave={setSavedSettings} onThemeChange={(nextTheme) => {
-        setTheme(nextTheme);
-        setSavedSettings((currentSettings) => ({ ...currentSettings, theme: nextTheme }));
-      }} />;
+      return (
+        <Settings
+          initialSettings={savedSettings}
+          onSave={setSavedSettings}
+          onThemeChange={(nextTheme) => {
+            setTheme(nextTheme);
+            setSavedSettings((currentSettings) => ({
+              ...currentSettings,
+              theme: nextTheme,
+            }));
+          }}
+        />
+      );
     }
 
     return <Dashboard />;
   };
 
-  const pageSubtitle = currentPage === "returns"
-    ? "Process book returns"
+  const pageSubtitle =
+    currentPage === "returns"
+      ? "Process book returns"
       : currentPage === "borrowing"
-      ? "Track active book loans"
-      : currentPage === "settings"
-        ? "Manage your library preferences"
-      : undefined;
+        ? "Track active book loans"
+        : currentPage === "reports"
+          ? "Analyze library activity, borrowing trends, and collection performance"
+          : currentPage === "settings"
+            ? "Manage your library preferences"
+            : undefined;
 
   return (
-    <LibraryDataProvider initialBooks={initialBooks} initialStudents={initialStudents}>
+    <LibraryDataProvider
+      initialBooks={initialBooks}
+      initialStudents={initialStudents}
+    >
       <div className={`app-theme app-theme--${theme}`}>
-      <Layout
-        currentPage={currentPage}
-        onNavigate={setCurrentPage}
-        title={getPageTitle()}
-        subtitle={pageSubtitle}
-      >
-        {renderPage()}
-      </Layout>
+        <Layout
+          currentPage={currentPage}
+          onNavigate={setCurrentPage}
+          title={getPageTitle()}
+          subtitle={pageSubtitle}
+        >
+          {renderPage()}
+        </Layout>
       </div>
     </LibraryDataProvider>
   );

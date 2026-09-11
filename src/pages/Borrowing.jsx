@@ -225,6 +225,9 @@ function Borrowing() {
       .borrowing-modal-search:focus, .borrowing-date-grid input:focus { outline: none; border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,.16); background: #fff; }
       @media (max-width: 900px) { .borrowing-table th:nth-child(4), .borrowing-table td:nth-child(4), .borrowing-table th:nth-child(6), .borrowing-table td:nth-child(6) { display: none; } .borrowing-table th:nth-child(5) { width: 13%; } }
       @media (max-width: 680px) { .borrowing-page { padding: 16px; } .borrowing-heading { align-items: flex-start; flex-direction: column; } .borrowing-add-button { width: 100%; justify-content: center; } .borrowing-summary { grid-template-columns: 1fr; } .borrowing-controls { align-items: stretch; } .borrowing-search { max-width: none; } .borrowing-filter { min-width: 0; } .borrowing-table th, .borrowing-table td { padding-left: 6px; padding-right: 6px; } .borrowing-table th:nth-child(5), .borrowing-table td:nth-child(5), .borrowing-table th:nth-child(7), .borrowing-table td:nth-child(7) { display: none; } .borrowing-table th:nth-child(2) { width: 25%; } .borrowing-table th:nth-child(3) { width: 29%; } .borrowing-table th:nth-child(8) { width: 18%; } .borrowing-footer { align-items: flex-start; flex-direction: column; } .borrowing-modal { width: min(100%, 480px); } .borrowing-date-grid { grid-template-columns: 1fr; } }
+      .borrowing-modal { display: flex; flex-direction: column; max-height: min(720px, calc(100svh - 48px)); }
+      .borrowing-modal-header, .borrowing-modal-actions { flex: 0 0 auto; }
+      .borrowing-modal-content { min-height: 0; overflow-y: auto; }
     `}</style>
       <div className="borrowing-page">
         <div className="borrowing-panel">
