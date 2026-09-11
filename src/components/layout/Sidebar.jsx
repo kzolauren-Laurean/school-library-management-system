@@ -5,12 +5,19 @@ import {
   GearIcon,
   ReportsIcon,
   ReturnIcon,
+  UserIcon,
   UsersIcon,
 } from "./NavigationIcons";
 import { getDateOnly, getLoanDetails } from "../../data/LibraryUtils";
 import { useLibraryData } from "../../data/useLibraryData";
 
-function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
+function Sidebar({
+  currentPage = "dashboard",
+  onNavigate = () => {},
+  userProfile = null,
+  isOpen = false,
+  onClose = () => {},
+}) {
   const { loans } = useLibraryData();
   const currentLoanCount = loans.filter(
     (loan) => getLoanDetails(loan, getDateOnly()).status !== "Returned",
@@ -19,10 +26,18 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
   const handleNavClick = (event, pageKey) => {
     event.preventDefault();
     onNavigate(pageKey);
+    onClose();
   };
-
+  const profileName = userProfile?.name?.trim() || "Guest User";
+  const profileRole = userProfile?.role?.trim() || "Not signed in";
+  const profileInitials = userProfile?.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join("") || "";
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sidebar-brand">
         <div className="brand-icon">
           <img src="/assets/library-logo.png" alt="Library logo" />
@@ -109,7 +124,10 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
         <button
           type="button"
           className={`nav-item nav-button ${currentPage === "settings" ? "active" : ""}`}
-          onClick={() => onNavigate("settings")}
+          onClick={() => {
+            onNavigate("settings");
+            onClose();
+          }}
         >
           <span>
             <GearIcon />
@@ -119,17 +137,25 @@ function Sidebar({ currentPage = "dashboard", onNavigate = () => {} }) {
       </nav>
 
       <div className="sidebar-user">
-        <div className="user-avatar">JD</div>
+        <div
+          className={`user-avatar ${profileInitials ? "" : "user-avatar--empty"}`}
+        >
+          {profileInitials || <UserIcon />}
+        </div>
 
         <div className="user-info">
-          <strong>Jane Doe</strong>
-          <span>Head Librarian</span>
+          <strong>{profileName}</strong>
+          <span>{profileRole}</span>
         </div>
 
         <button
           type="button"
           className="user-settings"
           aria-label="Open user settings"
+          onClick={() => {
+            onNavigate("settings");
+            onClose();
+          }}
         >
           <GearIcon />
         </button>

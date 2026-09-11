@@ -28,6 +28,15 @@ export function UsersIcon() {
   );
 }
 
+export function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5 20a7 7 0 0 1 14 0" />
+    </svg>
+  );
+}
+
 export function BorrowIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
