@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATHS } from "../../appRoutes";
 import { getDateOnly, getLoanDetails } from "../../data/LibraryUtils";
 import { useLibraryData } from "../../data/useLibraryData";
 import { navigationIcons } from "./NavigationIcons";
@@ -11,11 +13,11 @@ function Header({
   searchPlaceholder = "Search...",
   showAddBook = true,
   showPageIcon = true,
-  onNavigate,
   onAddBookClick,
   onMenuToggle,
   menuOpen = false,
 }) {
+  const navigate = useNavigate();
   const PageIcon = navigationIcons[currentPage] || navigationIcons.dashboard;
   const { books, students, loans } = useLibraryData();
   const [searchValue, setSearchValue] = useState("");
@@ -33,6 +35,7 @@ function Header({
     };
 
     document.addEventListener("pointerdown", handleOutsideSearchClick);
+
     return () => {
       document.removeEventListener("pointerdown", handleOutsideSearchClick);
     };
@@ -57,6 +60,7 @@ function Header({
         detail: `${book.author} · ${book.category}`,
         page: "book-catalog",
       }));
+
     const studentResults = students
       .filter((student) =>
         [student.fullName, student.email, student.id, student.grade]
@@ -89,7 +93,9 @@ function Header({
           tone: "danger",
           title: "Overdue book",
           message: `${bookTitle} · ${studentName}`,
-          detail: `${details.overdueDays} day${details.overdueDays === 1 ? "" : "s"} overdue`,
+          detail: `${details.overdueDays} day${
+            details.overdueDays === 1 ? "" : "s"
+          } overdue`,
           page: "returns",
         });
       } else if (details.status === "Active" && details.days <= 3) {
@@ -120,7 +126,7 @@ function Header({
   }, [loans, today]);
 
   const handleSearchResult = (page) => {
-    onNavigate?.(page);
+    navigate(PAGE_PATHS[page] || PAGE_PATHS.dashboard);
     setSearchValue("");
     setSearchFocused(false);
   };
@@ -136,6 +142,7 @@ function Header({
           )}
           {title}
         </h1>
+
         <p className="header-date">{subtitle || date}</p>
       </div>
 
@@ -153,8 +160,10 @@ function Header({
           <span aria-hidden="true" />
           <span aria-hidden="true" />
         </button>
+
         <div className="header-search" ref={searchRef} role="search">
           <span className="icon-search" aria-hidden="true"></span>
+
           <input
             type="text"
             className="header-search-input"
@@ -170,10 +179,13 @@ function Header({
               }
             }}
           />
+
           {searchFocused && (
             <div className="header-search-panel">
               {!searchTerm ? (
-                <p className="header-search-empty">Search books or students</p>
+                <p className="header-search-empty">
+                  Search books or students
+                </p>
               ) : searchResults.length ? (
                 searchResults.map((result) => (
                   <button
@@ -186,6 +198,7 @@ function Header({
                     <span className="header-search-result-type">
                       {result.type}
                     </span>
+
                     <span>
                       <strong>{result.title}</strong>
                       <small>{result.detail}</small>
@@ -214,12 +227,14 @@ function Header({
             onClick={() => setNotificationsOpen((isOpen) => !isOpen)}
           >
             <span className="icon-bell" aria-hidden="true"></span>
+
             {notifications.length > 0 && (
               <span className="header-notification-badge">
                 {notifications.length > 9 ? "9+" : notifications.length}
               </span>
             )}
           </button>
+
           {notificationsOpen && (
             <div className="header-notification-panel">
               <div className="header-notification-heading">
@@ -229,6 +244,7 @@ function Header({
                   {notifications.length === 1 ? "" : "s"}
                 </span>
               </div>
+
               {notifications.length ? (
                 notifications.slice(0, 6).map((notification) => (
                   <button
@@ -244,6 +260,7 @@ function Header({
                       className="header-notification-dot"
                       aria-hidden="true"
                     />
+
                     <span>
                       <strong>{notification.title}</strong>
                       <small>{notification.message}</small>
@@ -256,6 +273,7 @@ function Header({
                   Everything is up to date
                 </p>
               )}
+
               {notifications.length > 6 && (
                 <button
                   type="button"
