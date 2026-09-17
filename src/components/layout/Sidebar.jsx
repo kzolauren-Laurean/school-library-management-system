@@ -1,3 +1,4 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   BookIcon,
   BorrowIcon,
@@ -8,26 +9,30 @@ import {
   UserIcon,
   UsersIcon,
 } from "./NavigationIcons";
+import { PAGE_PATHS } from "../../appRoutes";
 import { getDateOnly, getLoanDetails } from "../../data/LibraryUtils";
 import { useLibraryData } from "../../data/useLibraryData";
 
 function Sidebar({
-  currentPage = "dashboard",
-  onNavigate = () => {},
   userProfile = null,
   isOpen = false,
   onClose = () => {},
 }) {
+  const navigate = useNavigate();
   const { loans } = useLibraryData();
   const currentLoanCount = loans.filter(
     (loan) => getLoanDetails(loan, getDateOnly()).status !== "Returned",
   ).length;
 
-  const handleNavClick = (event, pageKey) => {
-    event.preventDefault();
-    onNavigate(pageKey);
+  const handleNavClick = () => {
     onClose();
   };
+
+  const openSettings = () => {
+    navigate(PAGE_PATHS.settings);
+    onClose();
+  };
+
   const profileName = userProfile?.name?.trim() || "Guest User";
   const profileRole = userProfile?.role?.trim() || "Not signed in";
   const profileInitials =
@@ -53,88 +58,85 @@ function Sidebar({
       <nav className="sidebar-nav">
         <p className="nav-section-title">MAIN MENU</p>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "dashboard" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "dashboard")}
+        <NavLink
+          to={PAGE_PATHS.dashboard}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <DashboardIcon />
           </span>
           <span>Dashboard</span>
-        </a>
+        </NavLink>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "book-catalog" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "book-catalog")}
+        <NavLink
+          to={PAGE_PATHS["book-catalog"]}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <BookIcon />
           </span>
           <span>Book Catalog</span>
-        </a>
+        </NavLink>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "students" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "students")}
+        <NavLink
+          to={PAGE_PATHS.students}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <UsersIcon />
           </span>
           <span>Students</span>
-        </a>
+        </NavLink>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "borrowing" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "borrowing")}
+        <NavLink
+          to={PAGE_PATHS.borrowing}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <BorrowIcon />
           </span>
           <span>Borrowing</span>
           <span className="nav-badge">{currentLoanCount}</span>
-        </a>
+        </NavLink>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "returns" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "returns")}
+        <NavLink
+          to={PAGE_PATHS.returns}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <ReturnIcon />
           </span>
           <span>Returns</span>
-        </a>
+        </NavLink>
 
         <p className="nav-section-title system-title">SYSTEM</p>
 
-        <a
-          href="#"
-          className={`nav-item ${currentPage === "reports" ? "active" : ""}`}
-          onClick={(event) => handleNavClick(event, "reports")}
+        <NavLink
+          to={PAGE_PATHS.reports}
+          className="nav-item"
+          onClick={handleNavClick}
         >
           <span>
             <ReportsIcon />
           </span>
           <span>Reports</span>
-        </a>
+        </NavLink>
 
-        <button
-          type="button"
-          className={`nav-item nav-button ${currentPage === "settings" ? "active" : ""}`}
-          onClick={() => {
-            onNavigate("settings");
-            onClose();
-          }}
+        <NavLink
+          to={PAGE_PATHS.settings}
+          className="nav-item nav-button"
+          onClick={handleNavClick}
         >
           <span>
             <GearIcon />
           </span>
           <span>Settings</span>
-        </button>
+        </NavLink>
       </nav>
 
       <div className="sidebar-user">
@@ -153,10 +155,7 @@ function Sidebar({
           type="button"
           className="user-settings"
           aria-label="Open user settings"
-          onClick={() => {
-            onNavigate("settings");
-            onClose();
-          }}
+          onClick={openSettings}
         >
           <GearIcon />
         </button>

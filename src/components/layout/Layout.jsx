@@ -1,27 +1,30 @@
 import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+  getPageKeyFromPath,
+  getPathForPage,
+  PAGE_SUBTITLES,
+  PAGE_TITLES,
+} from "../../appRoutes";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
-function Layout({
-  children,
-  currentPage = "dashboard",
-  onNavigate,
-  title = "Dashboard",
-  subtitle,
-  userProfile,
-}) {
+function Layout({ userProfile }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const currentPage = getPageKeyFromPath(location.pathname);
+  const title = PAGE_TITLES[currentPage] || PAGE_TITLES.dashboard;
+  const subtitle = PAGE_SUBTITLES[currentPage];
 
   const handleNavigate = (page) => {
-    onNavigate?.(page);
+    navigate(getPathForPage(page));
     setSidebarOpen(false);
   };
 
   return (
     <div className={`app-layout ${sidebarOpen ? "sidebar-is-open" : ""}`}>
       <Sidebar
-        currentPage={currentPage}
-        onNavigate={handleNavigate}
         userProfile={userProfile}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -53,7 +56,9 @@ function Layout({
           showPageIcon={currentPage !== "settings"}
         />
 
-        <main className="main-content">{children}</main>
+        <main className="main-content">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
